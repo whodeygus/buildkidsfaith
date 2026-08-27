@@ -4,7 +4,7 @@
   "private": true,
   "description": "BuildKidsFaith site with member login and gated curriculum downloads.",
   "dependencies": {
-    "@supabase/supabase-js": "^2.45.4",
+    "@supabase/supabase-js": "^2.50.0",
     "stripe": "^16.12.0"
   }
 }

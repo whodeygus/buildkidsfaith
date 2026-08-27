@@ -77,7 +77,10 @@
             <a href="#mission" class="hover:text-forest transition">Our Heart</a>
             <a href="#pricing" class="hover:text-forest transition">Pricing</a>
         </div>
-        <a href="#pricing" class="bg-forest text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-900 transition">Start Growing</a>
+        <div class="flex items-center gap-3">
+            <button id="nav-auth-btn" class="text-sm font-medium hover:text-forest transition">Member Login</button>
+            <a href="#pricing" class="bg-forest text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-900 transition">Start Growing</a>
+        </div>
     </nav>
 
     <section class="py-24 px-8 bg-white max-w-7xl mx-auto border-t border-slate-50">
@@ -187,6 +190,17 @@
         </div>
    </section>
 
+    <section id="members" class="py-24 px-8 max-w-3xl mx-auto hidden">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-heading text-forest">Member Downloads</h2>
+            <p id="members-status" class="text-slate-500 mt-3"></p>
+        </div>
+        <ul id="members-file-list" class="space-y-4"></ul>
+        <div class="text-center mt-10">
+            <button id="logout-btn" class="text-sm text-slate-400 hover:text-forest transition">Log out</button>
+        </div>
+    </section>
+
     <section id="faq" class="py-24 px-8 max-w-5xl mx-auto">
         <div class="text-center mb-16">
             <h2 class="text-4xl font-heading text-forest">Common Questions</h2>
@@ -252,6 +266,189 @@
             </a>
         </p>
     </footer>
+
+    <div id="auth-modal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center px-4 z-50">
+        <div class="bg-white rounded-2xl p-8 max-w-sm w-full relative">
+            <button id="auth-modal-close" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">&times;</button>
+
+            <form id="login-form" class="space-y-4">
+                <h3 class="text-2xl text-forest mb-2">Member Login</h3>
+                <input type="email" id="login-email" required placeholder="Email" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm">
+                <input type="password" id="login-password" required placeholder="Password" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm">
+                <button type="submit" class="w-full py-3 bg-forest text-white rounded-xl font-bold hover:bg-slate-900 transition">Log In</button>
+                <p id="login-error" class="text-sm text-red-500 hidden"></p>
+                <button type="button" id="forgot-password-btn" class="text-xs text-slate-400 hover:text-forest transition">Forgot your password?</button>
+            </form>
+
+            <form id="recovery-form" class="space-y-4 hidden">
+                <h3 class="text-2xl text-forest mb-2">Set a New Password</h3>
+                <input type="password" id="recovery-password" required placeholder="New password" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm">
+                <button type="submit" class="w-full py-3 bg-forest text-white rounded-xl font-bold hover:bg-slate-900 transition">Save Password</button>
+                <p id="recovery-error" class="text-sm text-red-500 hidden"></p>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        // TODO: replace with your real Supabase project values (Project Settings > API).
+        // These are safe to expose in client-side code by design — access is enforced
+        // by Row Level Security policies and the server-side download endpoint, not by secrecy.
+        const SUPABASE_URL = 'https://wscasxowciubyyutyrzv.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_LknM2LKZ4DzHSguAvT-25w_JY3SY0p8';
+
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const authModal = document.getElementById('auth-modal');
+        const navAuthBtn = document.getElementById('nav-auth-btn');
+        const loginForm = document.getElementById('login-form');
+        const recoveryForm = document.getElementById('recovery-form');
+        const membersSection = document.getElementById('members');
+        const membersStatus = document.getElementById('members-status');
+        const membersFileList = document.getElementById('members-file-list');
+
+        function openModal() { authModal.classList.remove('hidden'); authModal.classList.add('flex'); }
+        function closeModal() { authModal.classList.add('hidden'); authModal.classList.remove('flex'); }
+
+        document.getElementById('auth-modal-close').addEventListener('click', closeModal);
+        navAuthBtn.addEventListener('click', async () => {
+            const { data } = await sb.auth.getSession();
+            if (data.session) {
+                document.getElementById('members').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                openModal();
+            }
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const errorEl = document.getElementById('login-error');
+            errorEl.classList.add('hidden');
+
+            const { error } = await sb.auth.signInWithPassword({ email, password });
+            if (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.remove('hidden');
+                return;
+            }
+            closeModal();
+            await refreshMemberUI();
+            membersSection.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        document.getElementById('forgot-password-btn').addEventListener('click', async () => {
+            const email = document.getElementById('login-email').value;
+            if (!email) {
+                alert('Enter your email above first, then click "Forgot your password?" again.');
+                return;
+            }
+            await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname });
+            alert('Check your email for a link to set a new password.');
+        });
+
+        recoveryForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('recovery-password').value;
+            const errorEl = document.getElementById('recovery-error');
+            errorEl.classList.add('hidden');
+
+            const { error } = await sb.auth.updateUser({ password });
+            if (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.remove('hidden');
+                return;
+            }
+            closeModal();
+            await refreshMemberUI();
+            membersSection.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            await sb.auth.signOut();
+            await refreshMemberUI();
+        });
+
+        sb.auth.onAuthStateChange((event) => {
+            if (event === 'PASSWORD_RECOVERY') {
+                loginForm.classList.add('hidden');
+                recoveryForm.classList.remove('hidden');
+                openModal();
+            }
+        });
+
+        async function requestDownload(fileKey, button) {
+            const { data } = await sb.auth.getSession();
+            if (!data.session) return;
+
+            const originalText = button.textContent;
+            button.disabled = true;
+            button.textContent = 'Preparing...';
+
+            try {
+                const res = await fetch(`/api/get-download-url?file=${encodeURIComponent(fileKey)}`, {
+                    headers: { Authorization: `Bearer ${data.session.access_token}` },
+                });
+                const body = await res.json();
+                if (!res.ok) throw new Error(body.error || 'Download failed');
+                window.open(body.url, '_blank');
+            } catch (err) {
+                alert(err.message);
+            } finally {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        }
+
+        async function refreshMemberUI() {
+            const { data: sessionData } = await sb.auth.getSession();
+            const session = sessionData.session;
+
+            if (!session) {
+                navAuthBtn.textContent = 'Member Login';
+                membersSection.classList.add('hidden');
+                return;
+            }
+
+            navAuthBtn.textContent = 'My Account';
+
+            const res = await fetch('/api/me', { headers: { Authorization: `Bearer ${session.access_token}` } });
+            const me = await res.json();
+
+            membersSection.classList.remove('hidden');
+
+            if (!me.active) {
+                membersStatus.textContent = 'Your subscription isn\'t active. Renew below to regain access to downloads.';
+                membersFileList.innerHTML = '';
+                return;
+            }
+
+            membersStatus.textContent = `Signed in as ${me.email}. Here's your curriculum:`;
+
+            const files = {
+                'month-01': "Month 1 - Full Curriculum Pack",
+                'teacher-guide': "Teacher's Master Guide",
+                'volunteer-quickref': 'Volunteer Quick-Reference',
+                'parent-plans': 'Weekly Parent Plans',
+            };
+
+            membersFileList.innerHTML = '';
+            Object.entries(files).forEach(([key, label]) => {
+                const li = document.createElement('li');
+                li.className = 'flex items-center justify-between p-5 border border-slate-100 rounded-2xl bg-sage-50';
+                li.innerHTML = `<span class="font-medium text-forest">${label}</span>`;
+                const btn = document.createElement('button');
+                btn.className = 'bg-forest text-white px-5 py-2 rounded-xl text-sm font-semibold hover:bg-slate-900 transition';
+                btn.textContent = 'Download';
+                btn.addEventListener('click', () => requestDownload(key, btn));
+                li.appendChild(btn);
+                membersFileList.appendChild(li);
+            });
+        }
+
+        refreshMemberUI();
+    </script>
 
 </body>
 </html>

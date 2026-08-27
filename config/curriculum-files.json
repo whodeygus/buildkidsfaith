@@ -1,0 +1,19 @@
+{
+  "_comment": "Each key is what the site's Download buttons send to /api/get-download-url?file=KEY. 'path' is the object's path inside the private Supabase Storage bucket. Add one entry per file after you upload it to Storage.",
+  "month-01": {
+    "label": "Month 1 - Full Curriculum Pack",
+    "path": "month-01/month-01-curriculum.pdf"
+  },
+  "teacher-guide": {
+    "label": "Teacher's Master Guide",
+    "path": "teacher-guide/teacher-master-guide.pdf"
+  },
+  "volunteer-quickref": {
+    "label": "Volunteer Quick-Reference",
+    "path": "volunteer-quickref/volunteer-quickref.pdf"
+  },
+  "parent-plans": {
+    "label": "Weekly Parent Plans",
+    "path": "parent-plans/weekly-parent-plans.pdf"
+  }
+}

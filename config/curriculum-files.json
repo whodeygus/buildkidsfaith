@@ -1,19 +1,393 @@
 {
-  "_comment": "Each key is what the site's Download buttons send to /api/get-download-url?file=KEY. 'path' is the object's path inside the private Supabase Storage bucket. Add one entry per file after you upload it to Storage.",
-  "month-01": {
+  "_comment": "Each key is what the site sends to /api/get-download-url?file=KEY. path is the object path inside the private Supabase Storage curriculum bucket. month is the 1-13 unlock tier used for the monthly-plan drip gate (annual plan ignores it and always gets everything). Upload files to Storage matching these paths exactly.",
+  "month-01-pack": {
     "label": "Month 1 - Full Curriculum Pack",
-    "path": "month-01/month-01-curriculum.pdf"
+    "path": "month-01/curriculum-pack.pdf",
+    "month": 1,
+    "type": "pack"
   },
-  "teacher-guide": {
-    "label": "Teacher's Master Guide",
-    "path": "teacher-guide/teacher-master-guide.pdf"
+  "week-01-slides": {
+    "label": "Week 1 - Story Slides",
+    "path": "month-01/week-01-story-slides.pptx",
+    "month": 1,
+    "type": "slides"
   },
-  "volunteer-quickref": {
-    "label": "Volunteer Quick-Reference",
-    "path": "volunteer-quickref/volunteer-quickref.pdf"
+  "week-02-slides": {
+    "label": "Week 2 - Story Slides",
+    "path": "month-01/week-02-story-slides.pptx",
+    "month": 1,
+    "type": "slides"
   },
-  "parent-plans": {
-    "label": "Weekly Parent Plans",
-    "path": "parent-plans/weekly-parent-plans.pdf"
+  "week-03-slides": {
+    "label": "Week 3 - Story Slides",
+    "path": "month-01/week-03-story-slides.pptx",
+    "month": 1,
+    "type": "slides"
+  },
+  "week-04-slides": {
+    "label": "Week 4 - Story Slides",
+    "path": "month-01/week-04-story-slides.pptx",
+    "month": 1,
+    "type": "slides"
+  },
+  "month-02-pack": {
+    "label": "Month 2 - Full Curriculum Pack",
+    "path": "month-02/curriculum-pack.pdf",
+    "month": 2,
+    "type": "pack"
+  },
+  "week-05-slides": {
+    "label": "Week 5 - Story Slides",
+    "path": "month-02/week-05-story-slides.pptx",
+    "month": 2,
+    "type": "slides"
+  },
+  "week-06-slides": {
+    "label": "Week 6 - Story Slides",
+    "path": "month-02/week-06-story-slides.pptx",
+    "month": 2,
+    "type": "slides"
+  },
+  "week-07-slides": {
+    "label": "Week 7 - Story Slides",
+    "path": "month-02/week-07-story-slides.pptx",
+    "month": 2,
+    "type": "slides"
+  },
+  "week-08-slides": {
+    "label": "Week 8 - Story Slides",
+    "path": "month-02/week-08-story-slides.pptx",
+    "month": 2,
+    "type": "slides"
+  },
+  "month-03-pack": {
+    "label": "Month 3 - Full Curriculum Pack",
+    "path": "month-03/curriculum-pack.pdf",
+    "month": 3,
+    "type": "pack"
+  },
+  "week-09-slides": {
+    "label": "Week 9 - Story Slides",
+    "path": "month-03/week-09-story-slides.pptx",
+    "month": 3,
+    "type": "slides"
+  },
+  "week-10-slides": {
+    "label": "Week 10 - Story Slides",
+    "path": "month-03/week-10-story-slides.pptx",
+    "month": 3,
+    "type": "slides"
+  },
+  "week-11-slides": {
+    "label": "Week 11 - Story Slides",
+    "path": "month-03/week-11-story-slides.pptx",
+    "month": 3,
+    "type": "slides"
+  },
+  "week-12-slides": {
+    "label": "Week 12 - Story Slides",
+    "path": "month-03/week-12-story-slides.pptx",
+    "month": 3,
+    "type": "slides"
+  },
+  "month-04-pack": {
+    "label": "Month 4 - Full Curriculum Pack",
+    "path": "month-04/curriculum-pack.pdf",
+    "month": 4,
+    "type": "pack"
+  },
+  "week-13-slides": {
+    "label": "Week 13 - Story Slides",
+    "path": "month-04/week-13-story-slides.pptx",
+    "month": 4,
+    "type": "slides"
+  },
+  "week-14-slides": {
+    "label": "Week 14 - Story Slides",
+    "path": "month-04/week-14-story-slides.pptx",
+    "month": 4,
+    "type": "slides"
+  },
+  "week-15-slides": {
+    "label": "Week 15 - Story Slides",
+    "path": "month-04/week-15-story-slides.pptx",
+    "month": 4,
+    "type": "slides"
+  },
+  "week-16-slides": {
+    "label": "Week 16 - Story Slides",
+    "path": "month-04/week-16-story-slides.pptx",
+    "month": 4,
+    "type": "slides"
+  },
+  "month-05-pack": {
+    "label": "Month 5 - Full Curriculum Pack",
+    "path": "month-05/curriculum-pack.pdf",
+    "month": 5,
+    "type": "pack"
+  },
+  "week-17-slides": {
+    "label": "Week 17 - Story Slides",
+    "path": "month-05/week-17-story-slides.pptx",
+    "month": 5,
+    "type": "slides"
+  },
+  "week-18-slides": {
+    "label": "Week 18 - Story Slides",
+    "path": "month-05/week-18-story-slides.pptx",
+    "month": 5,
+    "type": "slides"
+  },
+  "week-19-slides": {
+    "label": "Week 19 - Story Slides",
+    "path": "month-05/week-19-story-slides.pptx",
+    "month": 5,
+    "type": "slides"
+  },
+  "week-20-slides": {
+    "label": "Week 20 - Story Slides",
+    "path": "month-05/week-20-story-slides.pptx",
+    "month": 5,
+    "type": "slides"
+  },
+  "month-06-pack": {
+    "label": "Month 6 - Full Curriculum Pack",
+    "path": "month-06/curriculum-pack.pdf",
+    "month": 6,
+    "type": "pack"
+  },
+  "week-21-slides": {
+    "label": "Week 21 - Story Slides",
+    "path": "month-06/week-21-story-slides.pptx",
+    "month": 6,
+    "type": "slides"
+  },
+  "week-22-slides": {
+    "label": "Week 22 - Story Slides",
+    "path": "month-06/week-22-story-slides.pptx",
+    "month": 6,
+    "type": "slides"
+  },
+  "week-23-slides": {
+    "label": "Week 23 - Story Slides",
+    "path": "month-06/week-23-story-slides.pptx",
+    "month": 6,
+    "type": "slides"
+  },
+  "week-24-slides": {
+    "label": "Week 24 - Story Slides",
+    "path": "month-06/week-24-story-slides.pptx",
+    "month": 6,
+    "type": "slides"
+  },
+  "month-07-pack": {
+    "label": "Month 7 - Full Curriculum Pack",
+    "path": "month-07/curriculum-pack.pdf",
+    "month": 7,
+    "type": "pack"
+  },
+  "week-25-slides": {
+    "label": "Week 25 - Story Slides",
+    "path": "month-07/week-25-story-slides.pptx",
+    "month": 7,
+    "type": "slides"
+  },
+  "week-26-slides": {
+    "label": "Week 26 - Story Slides",
+    "path": "month-07/week-26-story-slides.pptx",
+    "month": 7,
+    "type": "slides"
+  },
+  "week-27-slides": {
+    "label": "Week 27 - Story Slides",
+    "path": "month-07/week-27-story-slides.pptx",
+    "month": 7,
+    "type": "slides"
+  },
+  "week-28-slides": {
+    "label": "Week 28 - Story Slides",
+    "path": "month-07/week-28-story-slides.pptx",
+    "month": 7,
+    "type": "slides"
+  },
+  "month-08-pack": {
+    "label": "Month 8 - Full Curriculum Pack",
+    "path": "month-08/curriculum-pack.pdf",
+    "month": 8,
+    "type": "pack"
+  },
+  "week-29-slides": {
+    "label": "Week 29 - Story Slides",
+    "path": "month-08/week-29-story-slides.pptx",
+    "month": 8,
+    "type": "slides"
+  },
+  "week-30-slides": {
+    "label": "Week 30 - Story Slides",
+    "path": "month-08/week-30-story-slides.pptx",
+    "month": 8,
+    "type": "slides"
+  },
+  "week-31-slides": {
+    "label": "Week 31 - Story Slides",
+    "path": "month-08/week-31-story-slides.pptx",
+    "month": 8,
+    "type": "slides"
+  },
+  "week-32-slides": {
+    "label": "Week 32 - Story Slides",
+    "path": "month-08/week-32-story-slides.pptx",
+    "month": 8,
+    "type": "slides"
+  },
+  "month-09-pack": {
+    "label": "Month 9 - Full Curriculum Pack",
+    "path": "month-09/curriculum-pack.pdf",
+    "month": 9,
+    "type": "pack"
+  },
+  "week-33-slides": {
+    "label": "Week 33 - Story Slides",
+    "path": "month-09/week-33-story-slides.pptx",
+    "month": 9,
+    "type": "slides"
+  },
+  "week-34-slides": {
+    "label": "Week 34 - Story Slides",
+    "path": "month-09/week-34-story-slides.pptx",
+    "month": 9,
+    "type": "slides"
+  },
+  "week-35-slides": {
+    "label": "Week 35 - Story Slides",
+    "path": "month-09/week-35-story-slides.pptx",
+    "month": 9,
+    "type": "slides"
+  },
+  "week-36-slides": {
+    "label": "Week 36 - Story Slides",
+    "path": "month-09/week-36-story-slides.pptx",
+    "month": 9,
+    "type": "slides"
+  },
+  "month-10-pack": {
+    "label": "Month 10 - Full Curriculum Pack",
+    "path": "month-10/curriculum-pack.pdf",
+    "month": 10,
+    "type": "pack"
+  },
+  "week-37-slides": {
+    "label": "Week 37 - Story Slides",
+    "path": "month-10/week-37-story-slides.pptx",
+    "month": 10,
+    "type": "slides"
+  },
+  "week-38-slides": {
+    "label": "Week 38 - Story Slides",
+    "path": "month-10/week-38-story-slides.pptx",
+    "month": 10,
+    "type": "slides"
+  },
+  "week-39-slides": {
+    "label": "Week 39 - Story Slides",
+    "path": "month-10/week-39-story-slides.pptx",
+    "month": 10,
+    "type": "slides"
+  },
+  "week-40-slides": {
+    "label": "Week 40 - Story Slides",
+    "path": "month-10/week-40-story-slides.pptx",
+    "month": 10,
+    "type": "slides"
+  },
+  "month-11-pack": {
+    "label": "Month 11 - Full Curriculum Pack",
+    "path": "month-11/curriculum-pack.pdf",
+    "month": 11,
+    "type": "pack"
+  },
+  "week-41-slides": {
+    "label": "Week 41 - Story Slides",
+    "path": "month-11/week-41-story-slides.pptx",
+    "month": 11,
+    "type": "slides"
+  },
+  "week-42-slides": {
+    "label": "Week 42 - Story Slides",
+    "path": "month-11/week-42-story-slides.pptx",
+    "month": 11,
+    "type": "slides"
+  },
+  "week-43-slides": {
+    "label": "Week 43 - Story Slides",
+    "path": "month-11/week-43-story-slides.pptx",
+    "month": 11,
+    "type": "slides"
+  },
+  "week-44-slides": {
+    "label": "Week 44 - Story Slides",
+    "path": "month-11/week-44-story-slides.pptx",
+    "month": 11,
+    "type": "slides"
+  },
+  "month-12-pack": {
+    "label": "Month 12 - Full Curriculum Pack",
+    "path": "month-12/curriculum-pack.pdf",
+    "month": 12,
+    "type": "pack"
+  },
+  "week-45-slides": {
+    "label": "Week 45 - Story Slides",
+    "path": "month-12/week-45-story-slides.pptx",
+    "month": 12,
+    "type": "slides"
+  },
+  "week-46-slides": {
+    "label": "Week 46 - Story Slides",
+    "path": "month-12/week-46-story-slides.pptx",
+    "month": 12,
+    "type": "slides"
+  },
+  "week-47-slides": {
+    "label": "Week 47 - Story Slides",
+    "path": "month-12/week-47-story-slides.pptx",
+    "month": 12,
+    "type": "slides"
+  },
+  "week-48-slides": {
+    "label": "Week 48 - Story Slides",
+    "path": "month-12/week-48-story-slides.pptx",
+    "month": 12,
+    "type": "slides"
+  },
+  "bonus-month-pack": {
+    "label": "Bonus Month - Full Curriculum Pack",
+    "path": "bonus-month/curriculum-pack.pdf",
+    "month": 13,
+    "type": "pack"
+  },
+  "week-49-slides": {
+    "label": "Week 49 - Story Slides",
+    "path": "bonus-month/week-49-story-slides.pptx",
+    "month": 13,
+    "type": "slides"
+  },
+  "week-50-slides": {
+    "label": "Week 50 - Story Slides",
+    "path": "bonus-month/week-50-story-slides.pptx",
+    "month": 13,
+    "type": "slides"
+  },
+  "week-51-slides": {
+    "label": "Week 51 - Story Slides",
+    "path": "bonus-month/week-51-story-slides.pptx",
+    "month": 13,
+    "type": "slides"
+  },
+  "week-52-slides": {
+    "label": "Week 52 - Story Slides",
+    "path": "bonus-month/week-52-story-slides.pptx",
+    "month": 13,
+    "type": "slides"
   }
 }

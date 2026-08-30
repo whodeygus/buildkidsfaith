@@ -15,10 +15,10 @@ The code is scaffolded with placeholders. Nothing works until you complete these
 1. Go to **Storage** in the Supabase dashboard, create a bucket named `curriculum`.
 2. Leave it **private** (not public) — this is what makes files inaccessible without going through the API.
 3. Upload every file listed in `config/curriculum-files.json`, matching its `path` values exactly. That file is auto-generated to cover the full catalog, so the folder layout is:
-   - `month-01/curriculum-pack.pdf` ... `month-12/curriculum-pack.pdf`, `bonus-month/curriculum-pack.pdf` — the 13 full Curriculum Pack PDFs
-   - `month-01/week-01-story-slides.pptx` through `week-04-story-slides.pptx` (and so on per month), `bonus-month/week-49-story-slides.pptx` through `week-52-story-slides.pptx` — the 52 weekly Story Slides decks
+   - `Month 1/curriculum-pack.pdf` ... `Month 12/curriculum-pack.pdf`, `Bonus Month/curriculum-pack.pdf` — the 13 full Curriculum Pack PDFs
+   - `Month 1/week-01-story-slides.pptx` through `week-04-story-slides.pptx` (and so on per month), `Bonus Month/week-49-story-slides.pptx` through `week-52-story-slides.pptx` — the 52 weekly Story Slides decks
 
-   65 files total. If you ever add a new month, regenerate `config/curriculum-files.json` (or edit it by hand) rather than editing `index.html`'s catalog directly — the site's `buildCatalog()` function derives the same key/path pattern automatically as long as month numbering stays sequential.
+   65 files total. Folder names are `Month 1`...`Month 12` and `Bonus Month` (capitalized, with a space) — that's what actually exists in Storage, so `config/curriculum-files.json` was generated to match rather than the other way around. If you ever add a new month, regenerate `config/curriculum-files.json` (or edit it by hand) using that same folder naming rather than editing `index.html`'s catalog directly — the site's `buildCatalog()` function only derives the display key/label pattern, not the Storage path, so it doesn't need to change.
 
 ## 2a. How access is gated (monthly drip vs. annual)
 - **Annual subscribers** see the entire catalog immediately — they already paid for the full year.

@@ -291,13 +291,38 @@
 
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
-        // TODO: replace with your real Supabase project values (Project Settings > API).
-        // These are safe to expose in client-side code by design — access is enforced
+        // Safe to expose in client-side code by design — access is enforced
         // by Row Level Security policies and the server-side download endpoint, not by secrecy.
         const SUPABASE_URL = 'https://wscasxowciubyyutyrzv.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_LknM2LKZ4DzHSguAvT-25w_JY3SY0p8';
 
         const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Mirrors config/curriculum-files.json's key naming/grouping for display only —
+        // the server is what actually enforces which files a subscriber may download.
+        function buildCatalog() {
+            const TOTAL_MONTHS = 13;
+            const catalog = [];
+            for (let m = 1; m <= TOTAL_MONTHS; m++) {
+                const isBonus = m === TOTAL_MONTHS;
+                const label = isBonus ? 'Bonus Month' : `Month ${m}`;
+                const packKey = isBonus ? 'bonus-month-pack' : `month-${String(m).padStart(2, '0')}-pack`;
+                const weeks = [];
+                const startWeek = (m - 1) * 4 + 1;
+                for (let w = startWeek; w < startWeek + 4; w++) {
+                    const wk = String(w).padStart(2, '0');
+                    weeks.push({ key: `week-${wk}-slides`, label: `Week ${w} - Story Slides` });
+                }
+                catalog.push({
+                    month: m,
+                    label,
+                    pack: { key: packKey, label: `${label} - Full Curriculum Pack` },
+                    weeks,
+                });
+            }
+            return catalog;
+        }
+        const CATALOG = buildCatalog();
 
         const authModal = document.getElementById('auth-modal');
         const navAuthBtn = document.getElementById('nav-auth-btn');
@@ -370,12 +395,18 @@
             await refreshMemberUI();
         });
 
-        sb.auth.onAuthStateChange((event) => {
-            if (event === 'PASSWORD_RECOVERY') {
+        sb.auth.onAuthStateChange((event, session) => {
+            // Invite links land here as either a PASSWORD_RECOVERY event or a plain
+            // SIGNED_IN event depending on Supabase's client version - checking the
+            // URL hash directly makes this reliable either way, since a new member
+            // always needs to set a password before anything else.
+            const isSetPasswordFlow = /type=(invite|recovery)/.test(window.location.hash);
+            if (event === 'PASSWORD_RECOVERY' || (session && isSetPasswordFlow)) {
                 loginForm.classList.add('hidden');
                 recoveryForm.classList.remove('hidden');
                 openModal();
             }
+            refreshMemberUI();
         });
 
         async function requestDownload(fileKey, button) {
@@ -424,26 +455,55 @@
                 return;
             }
 
-            membersStatus.textContent = `Signed in as ${me.email}. Here's your curriculum:`;
-
-            const files = {
-                'month-01': "Month 1 - Full Curriculum Pack",
-                'teacher-guide': "Teacher's Master Guide",
-                'volunteer-quickref': 'Volunteer Quick-Reference',
-                'parent-plans': 'Weekly Parent Plans',
-            };
+            const planLabel = me.plan === 'annual' ? 'annual' : 'monthly';
+            const unlockNote = me.nextUnlockDate
+                ? ` Your next month unlocks ${new Date(me.nextUnlockDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}.`
+                : '';
+            membersStatus.textContent = `Signed in as ${me.email} (${planLabel} plan).${unlockNote}`;
 
             membersFileList.innerHTML = '';
-            Object.entries(files).forEach(([key, label]) => {
-                const li = document.createElement('li');
-                li.className = 'flex items-center justify-between p-5 border border-slate-100 rounded-2xl bg-sage-50';
-                li.innerHTML = `<span class="font-medium text-forest">${label}</span>`;
-                const btn = document.createElement('button');
-                btn.className = 'bg-forest text-white px-5 py-2 rounded-xl text-sm font-semibold hover:bg-slate-900 transition';
-                btn.textContent = 'Download';
-                btn.addEventListener('click', () => requestDownload(key, btn));
-                li.appendChild(btn);
-                membersFileList.appendChild(li);
+            CATALOG.forEach((monthEntry) => {
+                const unlocked = monthEntry.month <= me.unlockedMonths;
+
+                const section = document.createElement('li');
+                section.className = 'border border-slate-100 rounded-2xl overflow-hidden' + (unlocked ? '' : ' opacity-60');
+
+                const header = document.createElement('div');
+                header.className = 'flex items-center justify-between px-5 py-4 bg-sage-50';
+                header.innerHTML = `
+                    <span class="font-bold text-forest">${monthEntry.label}</span>
+                    ${unlocked ? '' : '<span class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Locked</span>'}
+                `;
+                section.appendChild(header);
+
+                const monthFiles = document.createElement('ul');
+                monthFiles.className = 'divide-y divide-slate-100';
+                [monthEntry.pack, ...monthEntry.weeks].forEach((file) => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center justify-between px-5 py-3';
+
+                    const label = document.createElement('span');
+                    label.className = 'text-sm text-slate-600';
+                    label.textContent = file.label;
+                    li.appendChild(label);
+
+                    if (unlocked) {
+                        const btn = document.createElement('button');
+                        btn.className = 'bg-forest text-white px-4 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-900 transition';
+                        btn.textContent = 'Download';
+                        btn.addEventListener('click', () => requestDownload(file.key, btn));
+                        li.appendChild(btn);
+                    } else {
+                        const lock = document.createElement('span');
+                        lock.className = 'text-xs text-slate-400';
+                        lock.textContent = 'Unlocks later';
+                        li.appendChild(lock);
+                    }
+
+                    monthFiles.appendChild(li);
+                });
+                section.appendChild(monthFiles);
+                membersFileList.appendChild(section);
             });
         }
 

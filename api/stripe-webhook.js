@@ -1,5 +1,16 @@
 const Stripe = require('stripe');
 const { getSupabaseAdmin } = require('./_supabaseAdmin');
+const { TOTAL_MONTHS } = require('../config/total-months');
+
+// Monthly-plan subscribers unlock one content month per completed billing
+// cycle (never more, even if they resubscribe long after cancelling) so
+// a single payment can't be used to grab the entire library. Annual-plan
+// subscribers already paid for the full year up front, so they always get
+// everything immediately - months_unlocked is simply ignored for them.
+function planFromSubscription(subscription) {
+  const interval = subscription.items?.data?.[0]?.price?.recurring?.interval;
+  return interval === 'year' ? 'annual' : 'monthly';
+}
 
 // Stripe needs the raw, unparsed request body to verify the webhook signature.
 module.exports.config = { api: { bodyParser: false } };
@@ -49,10 +60,14 @@ module.exports = async (req, res) => {
         // Look up the subscription so status/period end are accurate from the start.
         let status = 'active';
         let currentPeriodEnd = null;
+        let plan = null;
         if (subscriptionId) {
-          const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+          const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+            expand: ['items.data.price'],
+          });
           status = subscription.status;
           currentPeriodEnd = new Date(subscription.current_period_end * 1000).toISOString();
+          plan = planFromSubscription(subscription);
         }
 
         // Find or create the Supabase Auth user for this email, then send them
@@ -82,6 +97,11 @@ module.exports = async (req, res) => {
             stripe_customer_id: customerId,
             stripe_subscription_id: subscriptionId,
             status,
+            plan,
+            // Every new checkout starts the drip over at month 1, even for a
+            // returning subscriber - unlocked months are earned by billing
+            // cycles actually paid, not by how long ago they first signed up.
+            months_unlocked: 1,
             current_period_end: currentPeriodEnd,
             updated_at: new Date().toISOString(),
           },
@@ -98,10 +118,31 @@ module.exports = async (req, res) => {
         const currentPeriodEnd = subscription.current_period_end
           ? new Date(subscription.current_period_end * 1000).toISOString()
           : null;
+        const plan = planFromSubscription(subscription);
+
+        const update = { status, plan, current_period_end: currentPeriodEnd, updated_at: new Date().toISOString() };
+
+        // Unlock the next content month only once a monthly-plan billing
+        // cycle has actually completed (the period end moved forward and
+        // the subscription is still in good standing) - never on a mere
+        // metadata update, and never for annual (which already sees everything).
+        if (plan === 'monthly' && status === 'active') {
+          const { data: existing } = await supabase
+            .from('subscribers')
+            .select('current_period_end, months_unlocked')
+            .eq('stripe_customer_id', subscription.customer)
+            .maybeSingle();
+
+          const renewed =
+            existing?.current_period_end && currentPeriodEnd && currentPeriodEnd > existing.current_period_end;
+          if (renewed) {
+            update.months_unlocked = Math.min((existing.months_unlocked || 1) + 1, TOTAL_MONTHS);
+          }
+        }
 
         const { error: updateError } = await supabase
           .from('subscribers')
-          .update({ status, current_period_end: currentPeriodEnd, updated_at: new Date().toISOString() })
+          .update(update)
           .eq('stripe_customer_id', subscription.customer);
         if (updateError) throw updateError;
         break;

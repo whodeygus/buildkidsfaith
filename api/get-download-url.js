@@ -1,5 +1,6 @@
 const { getSupabaseAdmin } = require('./_supabaseAdmin');
 const curriculumFiles = require('../config/curriculum-files.json');
+const { TOTAL_MONTHS } = require('../config/total-months');
 
 const SIGNED_URL_TTL_SECONDS = 300;
 
@@ -28,13 +29,22 @@ module.exports = async (req, res) => {
 
   const { data: subscriber } = await supabase
     .from('subscribers')
-    .select('status')
+    .select('status, plan, months_unlocked')
     .eq('user_id', userData.user.id)
     .maybeSingle();
 
   const isActive = subscriber?.status === 'active' || subscriber?.status === 'trialing';
   if (!isActive) {
     res.status(403).json({ error: 'No active subscription' });
+    return;
+  }
+
+  // Annual subscribers already paid for the full year and see everything.
+  // Monthly subscribers only see the months they've earned via completed
+  // billing cycles, so a single month's payment can't grab the whole library.
+  const unlockedMonths = subscriber.plan === 'annual' ? TOTAL_MONTHS : subscriber.months_unlocked || 1;
+  if (fileEntry.month > unlockedMonths) {
+    res.status(403).json({ error: 'This month is not unlocked yet' });
     return;
   }
 

@@ -395,12 +395,18 @@
             await refreshMemberUI();
         });
 
-        sb.auth.onAuthStateChange((event) => {
-            if (event === 'PASSWORD_RECOVERY') {
+        sb.auth.onAuthStateChange((event, session) => {
+            // Invite links land here as either a PASSWORD_RECOVERY event or a plain
+            // SIGNED_IN event depending on Supabase's client version - checking the
+            // URL hash directly makes this reliable either way, since a new member
+            // always needs to set a password before anything else.
+            const isSetPasswordFlow = /type=(invite|recovery)/.test(window.location.hash);
+            if (event === 'PASSWORD_RECOVERY' || (session && isSetPasswordFlow)) {
                 loginForm.classList.add('hidden');
                 recoveryForm.classList.remove('hidden');
                 openModal();
             }
+            refreshMemberUI();
         });
 
         async function requestDownload(fileKey, button) {

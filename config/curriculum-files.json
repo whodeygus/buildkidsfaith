@@ -1,5 +1,5 @@
 {
-  "_comment": "Each key is what the site sends to /api/get-download-url?file=KEY. path is the object path inside the private Supabase Storage curriculum bucket. month is the 1-13 unlock tier used for the monthly-plan drip gate (annual plan ignores it and always gets everything). Upload files to Storage matching these paths exactly.",
+  "_comment": "Each key is what the site sends to /api/get-download-url?file=KEY. path is the object path inside the private Supabase Storage curriculum bucket. month is the 1-13 unlock tier used for the monthly-plan drip gate (annual plan ignores it and always gets everything). type 'pack' is the Younger Kids full curriculum pack, 'slides' are Younger Kids weekly story slides, 'student-pack' is the Student Edition (Grades 6-12) pack for that same month - included with every subscription at no extra cost. Upload files to Storage matching these paths exactly.",
   "month-01-pack": {
     "label": "Month 1 - Full Curriculum Pack",
     "path": "Month 1/curriculum-pack.pdf",
@@ -389,5 +389,83 @@
     "path": "Bonus Month/week-52-story-slides.pptx",
     "month": 13,
     "type": "slides"
+  },
+  "month-01-student-pack": {
+    "label": "Month 1 - Student Edition Pack (Grades 6-12)",
+    "path": "Month 1/student-edition-pack.pdf",
+    "month": 1,
+    "type": "student-pack"
+  },
+  "month-02-student-pack": {
+    "label": "Month 2 - Student Edition Pack (Grades 6-12)",
+    "path": "Month 2/student-edition-pack.pdf",
+    "month": 2,
+    "type": "student-pack"
+  },
+  "month-03-student-pack": {
+    "label": "Month 3 - Student Edition Pack (Grades 6-12)",
+    "path": "Month 3/student-edition-pack.pdf",
+    "month": 3,
+    "type": "student-pack"
+  },
+  "month-04-student-pack": {
+    "label": "Month 4 - Student Edition Pack (Grades 6-12)",
+    "path": "Month 4/student-edition-pack.pdf",
+    "month": 4,
+    "type": "student-pack"
+  },
+  "month-05-student-pack": {
+    "label": "Month 5 - Student Edition Pack (Grades 6-12)",
+    "path": "Month 5/student-edition-pack.pdf",
+    "month": 5,
+    "type": "student-pack"
+  },
+  "month-06-student-pack": {
+    "label": "Month 6 - Student Edition Pack (Grades 6-12)",
+    "path": "Month 6/student-edition-pack.pdf",
+    "month": 6,
+    "type": "student-pack"
+  },
+  "month-07-student-pack": {
+    "label": "Month 7 - Student Edition Pack (Grades 6-12)",
+    "path": "Month 7/student-edition-pack.pdf",
+    "month": 7,
+    "type": "student-pack"
+  },
+  "month-08-student-pack": {
+    "label": "Month 8 - Student Edition Pack (Grades 6-12)",
+    "path": "Month 8/student-edition-pack.pdf",
+    "month": 8,
+    "type": "student-pack"
+  },
+  "month-09-student-pack": {
+    "label": "Month 9 - Student Edition Pack (Grades 6-12)",
+    "path": "Month 9/student-edition-pack.pdf",
+    "month": 9,
+    "type": "student-pack"
+  },
+  "month-10-student-pack": {
+    "label": "Month 10 - Student Edition Pack (Grades 6-12)",
+    "path": "Month 10/student-edition-pack.pdf",
+    "month": 10,
+    "type": "student-pack"
+  },
+  "month-11-student-pack": {
+    "label": "Month 11 - Student Edition Pack (Grades 6-12)",
+    "path": "Month 11/student-edition-pack.pdf",
+    "month": 11,
+    "type": "student-pack"
+  },
+  "month-12-student-pack": {
+    "label": "Month 12 - Student Edition Pack (Grades 6-12)",
+    "path": "Month 12/student-edition-pack.pdf",
+    "month": 12,
+    "type": "student-pack"
+  },
+  "bonus-month-student-pack": {
+    "label": "Bonus Month - Student Edition Pack (Grades 6-12)",
+    "path": "Bonus Month/student-edition-pack.pdf",
+    "month": 13,
+    "type": "student-pack"
   }
 }

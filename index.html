@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>BuildKidsFaith | Affordable Sunday School Curriculum for Church Plants</title>
-    <meta name="description" content="High-engagement, gospel-centered Sunday School curriculum designed specifically for church plants and new ministries. Start growing for just $10/month.">
+    <meta name="description" content="High-engagement, gospel-centered Sunday School curriculum designed specifically for church plants and new ministries. Now includes both a Younger Kids track and a Student Edition for grades 6-12. Start growing for just $10/month.">
     <meta name="keywords" content="Sunday School Curriculum, Church Plant Resources, Children's Ministry, Christian Education, Build Kids Faith">
     
     <meta property="og:title" content="BuildKidsFaith | Sunday School for Startups">
@@ -166,6 +166,7 @@
                     <div class="my-8"><span class="text-6xl font-heading text-forest">$10</span><span class="text-slate-400">/mo</span></div>
                     <ul class="text-left space-y-4 mb-10 text-slate-600">
                         <li>• New Month Delivered Every 30 Days</li>
+                        <li>• Younger Kids &amp; Student Edition (Grades 6-12) Included</li>
                         <li>• Digital Activity Packets</li>
                         <li>• Cancel Anytime</li>
                     </ul>
@@ -181,6 +182,7 @@
                     <p class="text-forest font-bold mb-6 italic">2 Months Free Included</p>
                     <ul class="text-left space-y-4 mb-10 text-slate-600 font-semibold">
                         <li>• EVERYTHING in Monthly</li>
+                        <li>• Younger Kids &amp; Student Edition (Grades 6-12) Included</li>
                         <li>• Priority Content Updates</li>
                         <li>• Exclusive Bonus Kits</li>
                     </ul>
@@ -208,7 +210,11 @@
         <div class="grid md:grid-cols-2 gap-8">
             <div class="p-6 border border-slate-100 rounded-2xl">
                 <h4 class="font-bold text-forest mb-2">Can I share the guides with my team?</h4>
-                <p class="text-sm text-slate-600">Absolutely. One subscription covers your entire local church campus. You are free to print and distribute the Teacher and Volunteer guides to your staff.</p>
+                <p class="text-sm text-slate-600">Absolutely. One subscription covers your entire local church campus, both age tracks included. You are free to print and distribute the Teacher and Volunteer guides to your staff.</p>
+            </div>
+            <div class="p-6 border border-slate-100 rounded-2xl">
+                <h4 class="font-bold text-forest mb-2">Do you have anything for older kids?</h4>
+                <p class="text-sm text-slate-600">Yes. Every subscription includes our Student Edition, built for grades 6-12, alongside the Younger Kids track. Both follow the same monthly stories and scripture, so families with kids at different ages can talk about the same message around the dinner table.</p>
             </div>
             <div class="p-6 border border-slate-100 rounded-2xl">
                 <h4 class="font-bold text-forest mb-2">Which Bible version is used?</h4>
@@ -307,6 +313,7 @@
                 const isBonus = m === TOTAL_MONTHS;
                 const label = isBonus ? 'Bonus Month' : `Month ${m}`;
                 const packKey = isBonus ? 'bonus-month-pack' : `month-${String(m).padStart(2, '0')}-pack`;
+                const studentPackKey = isBonus ? 'bonus-month-student-pack' : `month-${String(m).padStart(2, '0')}-student-pack`;
                 const weeks = [];
                 const startWeek = (m - 1) * 4 + 1;
                 for (let w = startWeek; w < startWeek + 4; w++) {
@@ -317,6 +324,7 @@
                     month: m,
                     label,
                     pack: { key: packKey, label: `${label} - Full Curriculum Pack` },
+                    studentPack: { key: studentPackKey, label: `${label} - Student Edition Pack (Grades 6-12)` },
                     weeks,
                 });
             }
@@ -478,7 +486,7 @@
 
                 const monthFiles = document.createElement('ul');
                 monthFiles.className = 'divide-y divide-slate-100';
-                [monthEntry.pack, ...monthEntry.weeks].forEach((file) => {
+                [monthEntry.pack, monthEntry.studentPack, ...monthEntry.weeks].forEach((file) => {
                     const li = document.createElement('li');
                     li.className = 'flex items-center justify-between px-5 py-3';
 

@@ -135,7 +135,7 @@
 </head>
 <body class="bg-white text-slate-800 font-body antialiased">
 
-    <nav class="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
+    <nav class="relative flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
         <div class="flex items-center gap-3">
             <svg class="w-9 h-9 text-forest" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2C7.03 2 3 6.03 3 11c0 2.22 1.05 4.19 2.68 5.61l-.68 2.04c-.16.48-.02.99.37 1.35.39.36.94.46 1.41.25l2.03-.89C10.19 20.37 11.08 21 12 21s1.81-.63 2.19-1.64l2.03.89c.47.21 1.02.11 1.41-.25.39-.36.53-.87.37-1.35l-.68-2.04C19.95 15.19 21 13.22 21 11c0-4.97-4.03-9-9-9zm0 4v10M8 11h8"/>
@@ -148,8 +148,21 @@
             <a href="#pricing" class="hover:text-forest transition">Pricing</a>
         </div>
         <div class="flex items-center gap-3">
-            <button id="nav-auth-btn" class="text-sm font-medium hover:text-forest transition">Member Login</button>
+            <button id="nav-auth-btn" class="hidden md:inline text-sm font-medium hover:text-forest transition">Member Login</button>
             <a href="#pricing" class="bg-forest text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-900 transition">Start Growing</a>
+            <button id="mobile-menu-btn" class="md:hidden text-forest p-1 -mr-1" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+                <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path id="mobile-menu-icon-open" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/>
+                    <path id="mobile-menu-icon-close" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 6l12 12M18 6L6 18"/>
+                </svg>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 right-0 mt-2 mx-4 bg-white border border-slate-100 rounded-2xl shadow-lg px-6 py-5 flex flex-col gap-4 text-sm font-medium z-40">
+            <a href="#curriculum" class="hover:text-forest transition">Curriculum</a>
+            <a href="#mission" class="hover:text-forest transition">Our Heart</a>
+            <a href="#pricing" class="hover:text-forest transition">Pricing</a>
+            <button id="mobile-nav-auth-btn" class="text-left hover:text-forest transition">Member Login</button>
         </div>
     </nav>
 
@@ -408,7 +421,7 @@
         const CATALOG = buildCatalog();
 
         const authModal = document.getElementById('auth-modal');
-        const navAuthBtn = document.getElementById('nav-auth-btn');
+        const navAuthBtns = [document.getElementById('nav-auth-btn'), document.getElementById('mobile-nav-auth-btn')];
         const loginForm = document.getElementById('login-form');
         const recoveryForm = document.getElementById('recovery-form');
         const membersSection = document.getElementById('members');
@@ -419,13 +432,44 @@
         function closeModal() { authModal.classList.add('hidden'); authModal.classList.remove('flex'); }
 
         document.getElementById('auth-modal-close').addEventListener('click', closeModal);
-        navAuthBtn.addEventListener('click', async () => {
-            const { data } = await sb.auth.getSession();
-            if (data.session) {
-                document.getElementById('members').scrollIntoView({ behavior: 'smooth' });
+        navAuthBtns.forEach((btn) => {
+            btn.addEventListener('click', async () => {
+                closeMobileMenu();
+                const { data } = await sb.auth.getSession();
+                if (data.session) {
+                    document.getElementById('members').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    openModal();
+                }
+            });
+        });
+
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
+        const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
+
+        function closeMobileMenu() {
+            mobileMenu.classList.add('hidden');
+            mobileMenuIconOpen.classList.remove('hidden');
+            mobileMenuIconClose.classList.add('hidden');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        }
+
+        mobileMenuBtn.addEventListener('click', () => {
+            const isOpen = !mobileMenu.classList.contains('hidden');
+            if (isOpen) {
+                closeMobileMenu();
             } else {
-                openModal();
+                mobileMenu.classList.remove('hidden');
+                mobileMenuIconOpen.classList.add('hidden');
+                mobileMenuIconClose.classList.remove('hidden');
+                mobileMenuBtn.setAttribute('aria-expanded', 'true');
             }
+        });
+
+        mobileMenu.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', closeMobileMenu);
         });
 
         loginForm.addEventListener('submit', async (e) => {
@@ -543,12 +587,12 @@
             const session = sessionData.session;
 
             if (!session) {
-                navAuthBtn.textContent = 'Member Login';
+                navAuthBtns.forEach((btn) => { btn.textContent = 'Member Login'; });
                 membersSection.classList.add('hidden');
                 return;
             }
 
-            navAuthBtn.textContent = 'My Account';
+            navAuthBtns.forEach((btn) => { btn.textContent = 'My Account'; });
 
             const res = await fetch('/api/me', { headers: { Authorization: `Bearer ${session.access_token}` } });
             const me = await res.json();

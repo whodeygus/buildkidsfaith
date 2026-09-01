@@ -199,8 +199,13 @@
             <p id="members-status" class="text-slate-500 mt-3"></p>
         </div>
         <ul id="members-file-list" class="space-y-4"></ul>
-        <div class="text-center mt-10">
-            <button id="logout-btn" class="text-sm text-slate-400 hover:text-forest transition">Log out</button>
+        <div class="text-center mt-10 space-y-3">
+            <div>
+                <button id="manage-subscription-btn" class="bg-forest text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-900 transition">Manage My Subscription</button>
+            </div>
+            <div>
+                <button id="logout-btn" class="text-sm text-slate-400 hover:text-forest transition">Log out</button>
+            </div>
         </div>
     </section>
 
@@ -227,7 +232,7 @@
             </div>
             <div class="p-6 border border-slate-100 rounded-2xl">
                 <h4 class="font-bold text-forest mb-2">Can I cancel my subscription?</h4>
-                <p class="text-sm text-slate-600">Yes. We are here to serve your ministry, not trap you in a contract. You can cancel your monthly subscription at any time through your billing portal.</p>
+                <p class="text-sm text-slate-600">Yes. We are here to serve your ministry, not trap you in a contract. Log in and click "Manage My Subscription" in your Member Downloads area to cancel either plan yourself, anytime, through your secure billing portal.</p>
             </div>
         </div>
     </section>
@@ -402,6 +407,29 @@
         document.getElementById('logout-btn').addEventListener('click', async () => {
             await sb.auth.signOut();
             await refreshMemberUI();
+        });
+
+        document.getElementById('manage-subscription-btn').addEventListener('click', async (e) => {
+            const { data } = await sb.auth.getSession();
+            if (!data.session) return;
+
+            const button = e.currentTarget;
+            const originalText = button.textContent;
+            button.disabled = true;
+            button.textContent = 'Loading...';
+
+            try {
+                const res = await fetch('/api/create-portal-session', {
+                    headers: { Authorization: `Bearer ${data.session.access_token}` },
+                });
+                const body = await res.json();
+                if (!res.ok) throw new Error(body.error || 'Could not open billing portal');
+                window.location.href = body.url;
+            } catch (err) {
+                alert(err.message);
+                button.disabled = false;
+                button.textContent = originalText;
+            }
         });
 
         sb.auth.onAuthStateChange((event, session) => {

@@ -13,10 +13,16 @@ jobs:
     steps:
       - name: Ping Supabase REST endpoint
         run: |
-          curl -sS -o /dev/null -w "%{http_code}\n" \
+          code=$(curl -sS -o /tmp/response.txt -w "%{http_code}" \
             "${SUPABASE_URL}/rest/v1/subscribers?select=id&limit=1" \
             -H "apikey: ${SUPABASE_ANON_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}"
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}")
+          echo "Supabase responded with HTTP $code"
+          if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then
+            echo "::error::Supabase keep-alive ping failed with HTTP $code - the project may still auto-pause. Check that SUPABASE_URL/SUPABASE_ANON_KEY secrets are still valid and the project hasn't already been paused (a paused project's REST API also returns a non-2xx)."
+            cat /tmp/response.txt
+            exit 1
+          fi
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}

@@ -30,3 +30,21 @@ create policy "subscribers_select_own"
 -- all writes happen server-side via the service role key (Stripe webhook), which bypasses RLS.
 
 create index if not exists subscribers_stripe_customer_id_idx on public.subscribers (stripe_customer_id);
+
+-- Single-row table the keep-alive GitHub Action writes to. A confirmed,
+-- successful read via the anon key did NOT stop Supabase's free-tier
+-- auto-pause clock (verified in practice), so the keep-alive workflow now
+-- performs a real write here via the service role key instead - a write is
+-- a stronger "this project is in real use" signal than a read, though even
+-- this isn't guaranteed to be honored by Supabase's internal pause logic.
+create table if not exists public.keepalive (
+  id boolean primary key default true,
+  pinged_at timestamptz not null default now(),
+  constraint keepalive_singleton check (id)
+);
+
+insert into public.keepalive (id) values (true) on conflict (id) do nothing;
+
+alter table public.keepalive enable row level security;
+-- No policies defined on purpose: only the service role (which bypasses
+-- RLS) ever touches this table. No one else needs read or write access.

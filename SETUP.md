@@ -56,8 +56,9 @@ with your real Project URL and **anon public key** (not the service role key —
 
 ## 6. Prevent the free-tier project from pausing
 1. In your GitHub repo, go to **Settings > Secrets and variables > Actions**.
-2. Add secrets `SUPABASE_URL` and `SUPABASE_ANON_KEY` (same values as above).
-3. The workflow at `.github/workflows/supabase-keepalive.yml` will ping the project automatically every 4 days, so it never auto-pauses from inactivity — even with zero site traffic.
+2. Add secrets `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` (same values as above/step 2).
+3. The workflow at `.github/workflows/supabase-keepalive.yml` writes to a dedicated `keepalive` table (created by `sql/schema.sql`) every 4 days via the service role key, trying to keep the project from auto-pausing during quiet stretches.
+4. **This is not a guaranteed fix.** An earlier version of this workflow only did a read via the anon key, which logged a confirmed successful HTTP 200 just two days before the project paused anyway — so a real 2xx response is not proof the pause was prevented. If the project keeps pausing despite this workflow running green, the free-tier ping approach doesn't work at all; the reliable fix at that point is upgrading the Supabase project to the Pro plan, which removes free-tier auto-pause entirely.
 
 ## 7. Test end to end
 1. Run through checkout yourself with a Stripe test-mode card, once on the monthly link and once on the annual link.

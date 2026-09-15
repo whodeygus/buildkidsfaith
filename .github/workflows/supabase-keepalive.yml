@@ -1,7 +1,15 @@
 name: Supabase keep-alive
 
-# Free-tier Supabase projects auto-pause after 7 days with no API activity.
-# This pings the project every few days so it never pauses due to a quiet site.
+# Free-tier Supabase projects auto-pause after 7 days with no activity.
+# IMPORTANT: a confirmed, successful *read* via the anon key (the original
+# version of this workflow) did NOT stop the auto-pause clock in practice -
+# verified by the project pausing again days after a run that logged a real
+# HTTP 200. This now performs a real *write* via the service role key
+# instead, on a dedicated single-row table (see sql/schema.sql), since a
+# write is a stronger "real activity" signal than a read. Even this isn't
+# guaranteed to be honored by Supabase's internal pause logic - if the
+# project keeps pausing despite this running green, the free-tier ping
+# approach doesn't work at all and the real fix is upgrading to Pro.
 on:
   schedule:
     - cron: '0 12 */4 * *'
@@ -11,18 +19,23 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase REST endpoint
+      - name: Write to Supabase keepalive table
         run: |
+          now=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           code=$(curl -sS -o /tmp/response.txt -w "%{http_code}" \
-            "${SUPABASE_URL}/rest/v1/subscribers?select=id&limit=1" \
-            -H "apikey: ${SUPABASE_ANON_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}")
+            -X PATCH \
+            "${SUPABASE_URL}/rest/v1/keepalive?id=eq.true" \
+            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=minimal" \
+            -d "{\"pinged_at\": \"${now}\"}")
           echo "Supabase responded with HTTP $code"
           if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then
-            echo "::error::Supabase keep-alive ping failed with HTTP $code - the project may still auto-pause. Check that SUPABASE_URL/SUPABASE_ANON_KEY secrets are still valid and the project hasn't already been paused (a paused project's REST API also returns a non-2xx)."
+            echo "::error::Supabase keep-alive write failed with HTTP $code - the project may still auto-pause. Check that SUPABASE_URL/SUPABASE_SERVICE_ROLE_KEY secrets are still valid, that sql/schema.sql's keepalive table has been created, and that the project hasn't already been paused (a paused project's REST API also returns a non-2xx)."
             cat /tmp/response.txt
             exit 1
           fi
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

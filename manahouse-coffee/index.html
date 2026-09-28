@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manahouse Coffee | Veteran-Owned Coffee &amp; Gaming Lounge in Jacksboro, TN</title>
 <meta name="description" content="Manahouse Coffee is a veteran-owned coffee shop and gaming lounge in Jacksboro, Tennessee. Handcrafted espresso, cold brew, tea, food, and weekly Game Nights.">
-<meta name="theme-color" content="#0b0b0d">
+<meta name="theme-color" content="#0d0904">
 <meta property="og:title" content="Manahouse Coffee | Jacksboro, TN">
 <meta property="og:description" content="Veteran-owned coffee and gaming lounge. Refill your mana.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0b0d'/%3E%3Cpath d='M32 8 52 32 32 56 12 32Z' fill='none' stroke='%23d4a843' stroke-width='5'/%3E%3Cpath d='M32 20 42 32 32 44 22 32Z' fill='%23d4a843'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0904'/%3E%3Cpath d='M32 8 52 32 32 56 12 32Z' fill='none' stroke='%23e8a83a' stroke-width='5'/%3E%3Cpath d='M32 20 42 32 32 44 22 32Z' fill='%23e8a83a'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
@@ -30,17 +30,17 @@
 </script>
 <style>
 :root{
-  --bg:#0b0b0d;
-  --bg-2:#121216;
-  --card:#17171c;
-  --card-2:#1d1d24;
-  --line:rgba(212,168,67,.18);
-  --line-soft:rgba(255,255,255,.07);
-  --gold:#d4a843;
-  --gold-hi:#f3cf6e;
-  --gold-lo:#9c7a2a;
-  --text:#f2eee6;
-  --muted:#a29d93;
+  --bg:#0d0904;
+  --bg-2:#160e04;
+  --card:#1d1208;
+  --card-2:#221508;
+  --line:rgba(232,168,58,.18);
+  --line-soft:rgba(245,232,204,.08);
+  --gold:#e8a83a;
+  --gold-hi:#f5d88a;
+  --gold-lo:#a8701c;
+  --text:#f5e8cc;
+  --muted:#b0915f;
   --ok:#4ade80;
   --bad:#f87171;
   --radius:16px;
@@ -72,14 +72,14 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 
 /* buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 28px;border-radius:999px;font-weight:900;font-size:14px;letter-spacing:.14em;text-transform:uppercase;transition:transform .2s,box-shadow .2s,background .2s,color .2s;white-space:nowrap}
-.btn-gold{background:linear-gradient(135deg,var(--gold-hi),var(--gold) 45%,var(--gold-lo));color:#140f02;box-shadow:0 10px 30px -10px rgba(212,168,67,.7)}
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 16px 40px -10px rgba(212,168,67,.9)}
+.btn-gold{background:linear-gradient(135deg,var(--gold-hi),var(--gold) 45%,var(--gold-lo));color:#1a0f02;box-shadow:0 10px 30px -10px rgba(232,168,58,.7)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 16px 40px -10px rgba(232,168,58,.9)}
 .btn-ghost{border:1.5px solid var(--line);color:var(--text)}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
 
 /* ===== NAV ===== */
 .nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .3s,border-color .3s,backdrop-filter .3s;border-bottom:1px solid transparent}
-.nav.scrolled{background:rgba(11,11,13,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line-soft)}
+.nav.scrolled{background:rgba(13,9,4,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line-soft)}
 .nav-in{display:flex;align-items:center;justify-content:space-between;height:74px}
 .logo{display:flex;align-items:center;gap:12px}
 .logo svg{width:38px;height:38px}
@@ -89,14 +89,14 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .nav-links a{font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);transition:color .2s}
 .nav-links a:hover{color:var(--gold)}
 .nav-links .btn{padding:11px 22px;font-size:12px}
-.nav-links .btn-gold{color:#140f02}
+.nav-links .btn-gold{color:#1a0f02}
 .burger{display:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);position:relative}
 .burger span{position:absolute;left:12px;right:12px;height:2px;background:var(--gold);transition:transform .3s,opacity .3s}
 .burger span:nth-child(1){top:15px}.burger span:nth-child(2){top:21px}.burger span:nth-child(3){top:27px}
 .burger[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
 .burger[aria-expanded="true"] span:nth-child(2){opacity:0}
 .burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
-.mobile-menu{position:fixed;inset:74px 0 0 0;background:rgba(11,11,13,.97);backdrop-filter:blur(10px);z-index:49;display:flex;flex-direction:column;padding:40px 24px;gap:6px;transform:translateY(-12px);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s}
+.mobile-menu{position:fixed;inset:74px 0 0 0;background:rgba(13,9,4,.97);backdrop-filter:blur(10px);z-index:49;display:flex;flex-direction:column;padding:40px 24px;gap:6px;transform:translateY(-12px);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s}
 .mobile-menu.open{opacity:1;transform:none;pointer-events:auto}
 .mobile-menu a{font-family:var(--display);font-size:46px;letter-spacing:.03em;padding:4px 0;border-bottom:1px solid var(--line-soft)}
 .mobile-menu a:hover{color:var(--gold)}
@@ -106,15 +106,15 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .hero{min-height:100vh;min-height:100svh;display:flex;align-items:center;padding:130px 0 90px;overflow:hidden}
 .hero-bg{position:absolute;inset:0;z-index:0;
   background:
-   radial-gradient(900px 600px at 78% 30%,rgba(212,168,67,.20),transparent 60%),
-   radial-gradient(700px 500px at 10% 90%,rgba(212,168,67,.08),transparent 60%),
-   linear-gradient(180deg,#0b0b0d 0%,#0e0d10 100%)}
+   radial-gradient(900px 600px at 78% 30%,rgba(232,168,58,.20),transparent 60%),
+   radial-gradient(700px 500px at 10% 90%,rgba(232,168,58,.08),transparent 60%),
+   linear-gradient(180deg,#0d0904 0%,#120b04 100%)}
 .hero-grid{position:absolute;inset:0;z-index:0;opacity:.35;
   background-image:linear-gradient(var(--line-soft) 1px,transparent 1px),linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
   background-size:64px 64px;mask-image:radial-gradient(ellipse at 70% 40%,#000 10%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 70% 40%,#000 10%,transparent 70%)}
 .hero .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
-.badge{display:inline-flex;align-items:center;gap:10px;padding:8px 16px 8px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(212,168,67,.06);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-hi);margin-bottom:26px}
-.badge .star{width:22px;height:22px;border-radius:50%;background:var(--gold);display:grid;place-items:center;color:#140f02;font-size:12px}
+.badge{display:inline-flex;align-items:center;gap:10px;padding:8px 16px 8px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(232,168,58,.06);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-hi);margin-bottom:26px}
+.badge .star{width:22px;height:22px;border-radius:50%;background:var(--gold);display:grid;place-items:center;color:#1a0f02;font-size:12px}
 .hero h1{font-size:clamp(68px,11vw,152px);margin-bottom:22px}
 .hero h1 .outline{color:transparent;-webkit-text-stroke:1.5px var(--gold)}
 .hero .lead{margin-bottom:36px}
@@ -126,11 +126,11 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 /* hero art: mug + mana crystal */
 .hero-art{position:relative;aspect-ratio:1;max-width:480px;justify-self:end;width:100%}
 .ring{position:absolute;inset:4%;border-radius:50%;border:1px dashed var(--line);animation:spin 60s linear infinite}
-.ring.r2{inset:16%;border-style:solid;border-color:rgba(212,168,67,.10);animation-duration:40s;animation-direction:reverse}
+.ring.r2{inset:16%;border-style:solid;border-color:rgba(232,168,58,.10);animation-duration:40s;animation-direction:reverse}
 .ring::after{content:"";position:absolute;top:-5px;left:50%;width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 18px var(--gold)}
 @keyframes spin{to{transform:rotate(360deg)}}
 .mug{position:absolute;inset:0;display:grid;place-items:center}
-.mug svg{width:62%;filter:drop-shadow(0 30px 60px rgba(212,168,67,.25))}
+.mug svg{width:62%;filter:drop-shadow(0 30px 60px rgba(232,168,58,.25))}
 .steam path{stroke-dasharray:60;stroke-dashoffset:60;animation:steam 3.2s ease-in-out infinite}
 .steam path:nth-child(2){animation-delay:.6s}.steam path:nth-child(3){animation-delay:1.2s}
 @keyframes steam{0%{stroke-dashoffset:60;opacity:0}30%{opacity:.9}100%{stroke-dashoffset:-60;opacity:0}}
@@ -141,7 +141,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 @keyframes float{50%{transform:translateY(-12px)}}
 
 /* ticker */
-.ticker{border-block:1px solid var(--line);background:#0e0e11;overflow:hidden;padding:18px 0;position:relative;z-index:2}
+.ticker{border-block:1px solid var(--line);background:#110b05;overflow:hidden;padding:18px 0;position:relative;z-index:2}
 .ticker-track{display:flex;gap:48px;width:max-content;animation:tick 38s linear infinite}
 .ticker span{font-family:var(--display);font-size:30px;letter-spacing:.06em;white-space:nowrap;display:flex;align-items:center;gap:48px;color:var(--muted)}
 .ticker span::after{content:"◆";color:var(--gold);font-size:16px}
@@ -153,7 +153,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:40px;padding:6px;border:1px solid var(--line-soft);border-radius:999px;width:max-content;max-width:100%;background:var(--bg)}
 .tab{padding:12px 26px;border-radius:999px;font-weight:900;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);transition:all .25s}
 .tab:hover{color:var(--text)}
-.tab[aria-selected="true"]{background:var(--gold);color:#140f02}
+.tab[aria-selected="true"]{background:var(--gold);color:#1a0f02}
 .panel{display:none;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
 .panel.active{display:grid;animation:fade .45s ease}
 @keyframes fade{from{opacity:0;transform:translateY(10px)}}
@@ -164,26 +164,26 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .price{font-family:var(--display);font-size:28px;color:var(--gold);white-space:nowrap}
 .item p{color:var(--muted);font-size:15px;line-height:1.55;flex:1}
 .item-foot{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
-.tag{font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:rgba(212,168,67,.12);color:var(--gold-hi)}
+.tag{font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:rgba(232,168,58,.12);color:var(--gold-hi)}
 .tag.empty{background:none;padding:0}
 .add{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;color:var(--gold);font-size:22px;line-height:1;transition:all .2s}
-.add:hover{background:var(--gold);color:#140f02;border-color:var(--gold)}
+.add:hover{background:var(--gold);color:#1a0f02;border-color:var(--gold)}
 .add.pop{animation:pop .4s ease}
 @keyframes pop{50%{transform:scale(1.25)}}
-.item.signature{border-color:var(--line);background:linear-gradient(160deg,rgba(212,168,67,.10),var(--card) 55%)}
-.item.signature::before{content:"SIGNATURE";position:absolute;top:14px;right:-34px;transform:rotate(45deg);background:var(--gold);color:#140f02;font-size:10px;font-weight:900;letter-spacing:.16em;padding:4px 40px}
+.item.signature{border-color:var(--line);background:linear-gradient(160deg,rgba(232,168,58,.10),var(--card) 55%)}
+.item.signature::before{content:"SIGNATURE";position:absolute;top:14px;right:-34px;transform:rotate(45deg);background:var(--gold);color:#1a0f02;font-size:10px;font-weight:900;letter-spacing:.16em;padding:4px 40px}
 .item.signature .item-top{padding-right:36px}
 .menu-note{margin-top:30px;color:var(--muted);font-size:14px;text-align:center}
 
 /* ===== GAME NIGHTS ===== */
 .events{overflow:hidden}
-.events::before{content:"";position:absolute;inset:0;background:radial-gradient(800px 400px at 50% 0%,rgba(212,168,67,.10),transparent 70%);pointer-events:none}
+.events::before{content:"";position:absolute;inset:0;background:radial-gradient(800px 400px at 50% 0%,rgba(232,168,58,.10),transparent 70%);pointer-events:none}
 .ev-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;position:relative}
 .ev{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);padding:28px 24px;display:flex;flex-direction:column;gap:14px;transition:transform .3s,border-color .3s}
 .ev:hover{transform:translateY(-6px);border-color:var(--gold)}
 .ev-day{display:flex;align-items:center;justify-content:space-between}
 .ev-day b{font-family:var(--display);font-weight:400;font-size:20px;letter-spacing:.14em;color:var(--gold)}
-.ev-icon{width:52px;height:52px;border-radius:14px;background:rgba(212,168,67,.10);border:1px solid var(--line);display:grid;place-items:center}
+.ev-icon{width:52px;height:52px;border-radius:14px;background:rgba(232,168,58,.10);border:1px solid var(--line);display:grid;place-items:center}
 .ev-icon svg{width:28px;height:28px;stroke:var(--gold);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .ev h3{font-size:34px}
 .ev p{color:var(--muted);font-size:15px;flex:1}
@@ -194,11 +194,11 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 
 /* ===== LOYALTY / XP ===== */
 .xp{background:var(--bg-2)}
-.xp-box{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;background:linear-gradient(135deg,#17140b,var(--card) 60%);border:1px solid var(--line);border-radius:28px;padding:56px}
+.xp-box{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;background:linear-gradient(135deg,#2a1a08,var(--card) 60%);border:1px solid var(--line);border-radius:28px;padding:56px}
 .levels{display:flex;flex-direction:column;gap:14px}
 .lvl{display:grid;grid-template-columns:56px 1fr auto;gap:18px;align-items:center;padding:16px 18px;border-radius:14px;background:rgba(0,0,0,.35);border:1px solid var(--line-soft)}
-.lvl-n{width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-family:var(--display);font-size:26px;background:rgba(212,168,67,.12);color:var(--gold);border:1px solid var(--line)}
-.lvl.max .lvl-n{background:var(--gold);color:#140f02}
+.lvl-n{width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-family:var(--display);font-size:26px;background:rgba(232,168,58,.12);color:var(--gold);border:1px solid var(--line)}
+.lvl.max .lvl-n{background:var(--gold);color:#1a0f02}
 .lvl b{display:block;font-family:var(--display);font-weight:400;font-size:24px;letter-spacing:.04em;line-height:1.1}
 .lvl small{color:var(--muted);font-size:13px}
 .lvl em{font-style:normal;font-size:12px;font-weight:900;letter-spacing:.12em;color:var(--gold-hi);text-transform:uppercase}
@@ -209,11 +209,11 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 /* ===== ABOUT ===== */
 .about .wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:70px;align-items:center}
 .about-art{position:relative;aspect-ratio:4/5;border-radius:24px;overflow:hidden;border:1px solid var(--line);background:
-  radial-gradient(circle at 50% 38%,rgba(212,168,67,.25),transparent 55%),
-  linear-gradient(180deg,#15130e,#0b0b0d)}
+  radial-gradient(circle at 50% 38%,rgba(232,168,58,.25),transparent 55%),
+  linear-gradient(180deg,#1d1208,#0d0904)}
 .about-art svg.flag{position:absolute;inset:0;width:100%;height:100%;opacity:.16}
 .medal{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:58%}
-.about-art .cap{position:absolute;left:24px;right:24px;bottom:24px;background:rgba(11,11,13,.8);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:14px;padding:16px 18px;font-size:14px;color:var(--muted)}
+.about-art .cap{position:absolute;left:24px;right:24px;bottom:24px;background:rgba(13,9,4,.8);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:14px;padding:16px 18px;font-size:14px;color:var(--muted)}
 .about-art .cap b{display:block;font-family:var(--display);font-weight:400;font-size:26px;color:var(--text);letter-spacing:.04em;line-height:1.1}
 .about-copy p{color:var(--muted);margin-bottom:18px}
 .about-copy p strong{color:var(--text)}
@@ -253,12 +253,12 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 
 /* ===== CTA BAND ===== */
 .band{padding:90px 0;text-align:center;background:
-  radial-gradient(600px 260px at 50% 50%,rgba(212,168,67,.22),transparent 70%),var(--bg);border-top:1px solid var(--line)}
+  radial-gradient(600px 260px at 50% 50%,rgba(232,168,58,.22),transparent 70%),var(--bg);border-top:1px solid var(--line)}
 .band h2{margin-bottom:18px}
 .band .lead{margin:0 auto 34px}
 
 /* ===== FOOTER ===== */
-footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#08080a}
+footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090602}
 .foot{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;margin-bottom:44px}
 .foot p{color:var(--muted);font-size:15px;margin-top:16px;max-width:340px}
 .foot h4{font-size:12px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
@@ -268,15 +268,15 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#080
 .socials{display:flex;gap:10px;margin-top:20px}
 .socials a{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);display:grid;place-items:center;transition:all .2s}
 .socials a:hover{background:var(--gold);border-color:var(--gold)}
-.socials a:hover svg{stroke:#140f02}
+.socials a:hover svg{stroke:#1a0f02}
 .socials svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:1.8}
 .legal{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-top:26px;border-top:1px solid var(--line-soft);font-size:13px;color:var(--muted)}
 .legal a{color:var(--gold)}
 
 /* ===== ORDER MODAL / CART ===== */
-.cart-fab{position:fixed;right:20px;bottom:20px;z-index:40;display:flex;align-items:center;gap:10px;padding:14px 20px 14px 18px;border-radius:999px;background:var(--gold);color:#140f02;font-weight:900;font-size:13px;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 16px 40px -10px rgba(212,168,67,.8);transform:translateY(120px);transition:transform .35s cubic-bezier(.2,.9,.3,1.3)}
+.cart-fab{position:fixed;right:20px;bottom:20px;z-index:40;display:flex;align-items:center;gap:10px;padding:14px 20px 14px 18px;border-radius:999px;background:var(--gold);color:#1a0f02;font-weight:900;font-size:13px;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 16px 40px -10px rgba(232,168,58,.8);transform:translateY(120px);transition:transform .35s cubic-bezier(.2,.9,.3,1.3)}
 .cart-fab.show{transform:none}
-.cart-fab .count{background:#140f02;color:var(--gold);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;letter-spacing:0}
+.cart-fab .count{background:#1a0f02;color:var(--gold);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;letter-spacing:0}
 .overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .3s}
 .overlay.open{opacity:1;pointer-events:auto}
 .modal{width:100%;max-width:520px;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto;background:var(--bg-2);border:1px solid var(--line);border-radius:24px;padding:32px;transform:translateY(20px) scale(.98);transition:transform .35s}
@@ -304,7 +304,7 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#080
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .modal .btn{width:100%;margin-top:6px}
 .success{text-align:center;padding:10px 0}
-.success .check{width:84px;height:84px;margin:0 auto 18px;border-radius:50%;background:rgba(212,168,67,.12);border:1px solid var(--gold);display:grid;place-items:center}
+.success .check{width:84px;height:84px;margin:0 auto 18px;border-radius:50%;background:rgba(232,168,58,.12);border:1px solid var(--gold);display:grid;place-items:center}
 .success .check svg{width:40px;height:40px;stroke:var(--gold);fill:none;stroke-width:2.5}
 .success p{color:var(--muted);margin:10px 0 24px}
 .toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);background:var(--card-2);border:1px solid var(--gold);color:var(--text);padding:12px 20px;border-radius:999px;font-size:14px;font-weight:700;z-index:60;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap}
@@ -363,7 +363,7 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#080
 <header class="nav" id="nav">
   <div class="wrap nav-in">
     <a href="#top" class="logo" aria-label="Manahouse Coffee home">
-      <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4 56 32 32 60 8 32Z" fill="none" stroke="#d4a843" stroke-width="3.5"/><path d="M32 18 44 32 32 46 20 32Z" fill="#d4a843"/><path d="M32 18v28M20 32h24" stroke="#0b0b0d" stroke-width="2"/></svg>
+      <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4 56 32 32 60 8 32Z" fill="none" stroke="#e8a83a" stroke-width="3.5"/><path d="M32 18 44 32 32 46 20 32Z" fill="#e8a83a"/><path d="M32 18v28M20 32h24" stroke="#0d0904" stroke-width="2"/></svg>
       <span class="logo-txt">MANA<span>HOUSE</span></span>
     </a>
     <ul class="nav-links">
@@ -414,10 +414,10 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#080
       <div class="mug">
         <svg viewBox="0 0 240 260">
           <defs>
-            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3cf6e"/><stop offset=".5" stop-color="#d4a843"/><stop offset="1" stop-color="#8a6a22"/></linearGradient>
-            <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f1d22"/><stop offset="1" stop-color="#101013"/></linearGradient>
+            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5d88a"/><stop offset=".5" stop-color="#e8a83a"/><stop offset="1" stop-color="#a8701c"/></linearGradient>
+            <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1b0c"/><stop offset="1" stop-color="#140c05"/></linearGradient>
           </defs>
-          <g class="steam" fill="none" stroke="#d4a843" stroke-width="4" stroke-linecap="round" opacity=".8">
+          <g class="steam" fill="none" stroke="#e8a83a" stroke-width="4" stroke-linecap="round" opacity=".8">
             <path d="M85 70c-12-14 12-22 0-38"/><path d="M118 64c-12-14 12-22 0-38"/><path d="M151 70c-12-14 12-22 0-38"/>
           </g>
           <path d="M184 118h14a26 26 0 0 1 0 52h-18" fill="none" stroke="url(#g1)" stroke-width="12"/>
@@ -524,15 +524,15 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#080
   <div class="wrap">
     <div class="about-art rv-in" aria-hidden="true">
       <svg class="flag" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
-        <g fill="#d4a843">
+        <g fill="#e8a83a">
           <rect y="0" width="400" height="30"/><rect y="60" width="400" height="30"/><rect y="120" width="400" height="30"/><rect y="180" width="400" height="30"/><rect y="240" width="400" height="30"/><rect y="300" width="400" height="30"/><rect y="360" width="400" height="30"/><rect y="420" width="400" height="30"/><rect y="480" width="400" height="30"/>
         </g>
       </svg>
       <svg class="medal" viewBox="0 0 200 240">
-        <defs><linearGradient id="m1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3cf6e"/><stop offset=".55" stop-color="#d4a843"/><stop offset="1" stop-color="#7c5d1a"/></linearGradient></defs>
-        <path d="M60 0h80l-20 70H80Z" fill="#1d1d24" stroke="url(#m1)" stroke-width="3"/>
+        <defs><linearGradient id="m1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5d88a"/><stop offset=".55" stop-color="#e8a83a"/><stop offset="1" stop-color="#8c5c14"/></linearGradient></defs>
+        <path d="M60 0h80l-20 70H80Z" fill="#221508" stroke="url(#m1)" stroke-width="3"/>
         <path d="M86 0h28l-8 70H94Z" fill="url(#m1)"/>
-        <circle cx="100" cy="150" r="72" fill="#121216" stroke="url(#m1)" stroke-width="5"/>
+        <circle cx="100" cy="150" r="72" fill="#160e04" stroke="url(#m1)" stroke-width="5"/>
         <circle cx="100" cy="150" r="58" fill="none" stroke="url(#m1)" stroke-width="1.5" stroke-dasharray="3 5"/>
         <path d="M100 104l12.9 26.2 28.9 4.2-20.9 20.4 4.9 28.8L100 170l-25.8 13.6 4.9-28.8-20.9-20.4 28.9-4.2Z" fill="url(#m1)"/>
       </svg>
@@ -616,7 +616,7 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#080
     <div class="foot">
       <div>
         <a href="#top" class="logo" aria-label="Manahouse Coffee home">
-          <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4 56 32 32 60 8 32Z" fill="none" stroke="#d4a843" stroke-width="3.5"/><path d="M32 18 44 32 32 46 20 32Z" fill="#d4a843"/></svg>
+          <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4 56 32 32 60 8 32Z" fill="none" stroke="#e8a83a" stroke-width="3.5"/><path d="M32 18 44 32 32 46 20 32Z" fill="#e8a83a"/></svg>
           <span class="logo-txt">MANA<span>HOUSE</span></span>
         </a>
         <p>Veteran-owned coffee &amp; gaming lounge proudly serving Jacksboro and Campbell County, Tennessee.</p>

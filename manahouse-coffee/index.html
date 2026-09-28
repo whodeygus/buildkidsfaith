@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manahouse Coffee | Veteran-Owned Coffee &amp; Gaming Lounge in Jacksboro, TN</title>
-<meta name="description" content="Manahouse Coffee is a veteran-owned coffee shop and gaming lounge in Jacksboro, Tennessee. Handcrafted espresso, cold brew, tea, food, and weekly Game Nights.">
+<meta name="description" content="Manahouse Coffee is a veteran-owned coffee shop and gaming lounge in Jacksboro, Tennessee. Handcrafted natural syrups, lattes, cold brew, boba tea, paninis, and weekly game nights: Magic, Hunt a Killer and D&amp;D. 310 Main St.">
 <meta name="theme-color" content="#0d0904">
 <meta property="og:title" content="Manahouse Coffee | Jacksboro, TN">
-<meta property="og:description" content="Veteran-owned coffee and gaming lounge. Refill your mana.">
+<meta property="og:description" content="Veteran-owned coffee and game nights at 310 Main St, Jacksboro, TN. Handcrafted syrups made from real, natural ingredients.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0904'/%3E%3Cpath d='M32 8 52 32 32 56 12 32Z' fill='none' stroke='%23e8a83a' stroke-width='5'/%3E%3Cpath d='M32 20 42 32 32 44 22 32Z' fill='%23e8a83a'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,14 +18,23 @@
   "@context": "https://schema.org",
   "@type": "CafeOrCoffeeShop",
   "name": "Manahouse Coffee",
-  "description": "Veteran-owned coffee shop and gaming lounge.",
-  "servesCuisine": ["Coffee", "Tea", "Breakfast", "Pastries"],
+  "description": "Veteran-owned coffee shop with handcrafted natural syrups and weekly game nights.",
+  "telephone": "+1-423-377-1954",
+  "foundingDate": "2021-10",
+  "servesCuisine": ["Coffee", "Tea", "Paninis", "Pastries"],
   "address": {
     "@type": "PostalAddress",
+    "streetAddress": "310 Main St",
     "addressLocality": "Jacksboro",
     "addressRegion": "TN",
+    "postalCode": "37757",
     "addressCountry": "US"
-  }
+  },
+  "openingHoursSpecification": [
+    {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday"], "opens": "07:00", "closes": "18:00"},
+    {"@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "07:00", "closes": "22:00"},
+    {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday","Sunday"], "opens": "08:00", "closes": "18:00"}
+  ]
 }
 </script>
 <style>
@@ -59,7 +68,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .eyebrow{font-family:var(--body);font-weight:900;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
 h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:.02em;line-height:.95}
 h2{font-size:clamp(44px,7vw,84px)}
-h2 .gold,h1 .gold{color:var(--gold)}
+.gold{color:var(--gold)}
 .lead{color:var(--muted);font-size:clamp(17px,1.6vw,19px);max-width:620px}
 section{padding:110px 0;position:relative}
 .sec-head{display:flex;flex-direction:column;gap:14px;margin-bottom:52px}
@@ -103,7 +112,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .mobile-menu .btn{margin-top:28px;font-family:var(--body);font-size:14px}
 
 /* ===== HERO ===== */
-.hero{min-height:100vh;min-height:100svh;display:flex;align-items:center;padding:130px 0 90px;overflow:hidden}
+.hero{min-height:calc(100vh - 40px);min-height:calc(100svh - 40px);display:flex;align-items:center;padding:130px 0 90px;overflow:hidden}
 .hero-bg{position:absolute;inset:0;z-index:0;
   background:
    radial-gradient(900px 600px at 78% 30%,rgba(232,168,58,.20),transparent 60%),
@@ -115,7 +124,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .hero .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
 .badge{display:inline-flex;align-items:center;gap:10px;padding:8px 16px 8px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(232,168,58,.06);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-hi);margin-bottom:26px}
 .badge .star{width:22px;height:22px;border-radius:50%;background:var(--gold);display:grid;place-items:center;color:#1a0f02;font-size:12px}
-.hero h1{font-size:clamp(68px,11vw,152px);margin-bottom:22px}
+.hero h1{font-size:clamp(58px,8.4vw,118px);margin-bottom:22px}
 .hero h1 .outline{color:transparent;-webkit-text-stroke:1.5px var(--gold)}
 .hero .lead{margin-bottom:36px}
 .hero-ctas{display:flex;flex-wrap:wrap;gap:14px}
@@ -171,8 +180,6 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opa
 .add.pop{animation:pop .4s ease}
 @keyframes pop{50%{transform:scale(1.25)}}
 .item.signature{border-color:var(--line);background:linear-gradient(160deg,rgba(232,168,58,.10),var(--card) 55%)}
-.item.signature::before{content:"SIGNATURE";position:absolute;top:14px;right:-34px;transform:rotate(45deg);background:var(--gold);color:#1a0f02;font-size:10px;font-weight:900;letter-spacing:.16em;padding:4px 40px}
-.item.signature .item-top{padding-right:36px}
 .menu-note{margin-top:30px;color:var(--muted);font-size:14px;text-align:center}
 
 /* ===== GAME NIGHTS ===== */
@@ -337,7 +344,7 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090
   section{padding:80px 0}
   .wrap{padding:0 16px}
   .hero{padding-top:100px}
-  .hero-art{max-width:280px}
+  .hero-art{max-width:210px}
   .floaty{display:none}
   .hero-stats{gap:26px}
   .tabs{width:100%;border-radius:18px}
@@ -355,9 +362,45 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090
   *,*::before,*::after{animation:none!important;transition:none!important}
   .rv-in{opacity:1;transform:none}
 }
+
+/* ===== ADDITIONS ===== */
+.announce{position:relative;z-index:51;background:linear-gradient(90deg,#2a1a08,#3a240a,#2a1a08);border-bottom:1px solid var(--line);text-align:center;padding:10px 16px;font-size:14px;color:var(--gold-hi)}
+.announce b{color:var(--text)}
+
+
+.mobile-menu .mm-call{font-family:var(--body);font-size:14px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;text-align:center;border:0;color:var(--gold);margin-top:10px}
+.item h3{font-size:30px;letter-spacing:.03em}
+.menu-cta{margin-top:40px;display:flex;justify-content:center}
+.ev-note{margin-top:34px;text-align:center;color:var(--muted);font-size:15px}
+.ev-note b{color:var(--text)}
+.branches{position:absolute;top:22px;left:22px;right:22px;display:flex;justify-content:space-between;gap:10px}
+.branches span{font-size:11px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-hi);background:rgba(13,9,4,.75);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+.fine{font-size:13px;color:var(--muted);margin-top:14px;line-height:1.5}
+.hours li span.late{color:var(--gold)}
+.contact-list li > div{font-size:15px;line-height:1.5}
+.order-opt{display:grid;grid-template-columns:48px 1fr auto;gap:14px;align-items:center;padding:14px 16px;border-radius:14px;background:var(--card);border:1px solid var(--line-soft);margin-bottom:10px;transition:border-color .2s,transform .2s}
+.order-opt:hover{transform:translateY(-2px);border-color:var(--gold)}
+.order-opt .oi{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-weight:900;font-size:15px;color:#fff}
+.order-opt.dd .oi{background:#ff3008}
+.order-opt.ue .oi{background:#06c167}
+.order-opt.call .oi{background:var(--gold);color:#1a0f02;font-size:20px}
+.order-opt b{display:block;font-size:16px}
+.order-opt small{color:var(--muted);font-size:13px}
+.order-opt .arr{color:var(--gold);font-size:20px}
+.modal-open{margin-top:14px;text-align:center;font-size:13px;color:var(--muted)}
+@media (max-width:600px){
+  .announce{font-size:12.5px;padding:9px 12px}
+  .hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .hero-stats b{font-size:36px}
+}
 </style>
 </head>
 <body>
+
+<!-- ===== ANNOUNCEMENT ===== -->
+<div class="announce" id="announce">
+  <span>☕ Friday nights we're open until <b>10 PM</b>. Come for the coffee, stay for the game.</span>
+</div>
 
 <!-- ===== NAV ===== -->
 <header class="nav" id="nav">
@@ -369,10 +412,9 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090
     <ul class="nav-links">
       <li><a href="#menu">Menu</a></li>
       <li><a href="#events">Game Nights</a></li>
-      <li><a href="#rewards">Rewards</a></li>
       <li><a href="#about">Our Story</a></li>
-      <li><a href="#visit">Visit</a></li>
-      <li><button class="btn btn-gold" data-open-order>Order Ahead</button></li>
+      <li><a href="#visit">Visit Us</a></li>
+      <li><button class="btn btn-gold" data-open-order>Order Online</button></li>
     </ul>
     <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
   </div>
@@ -380,10 +422,10 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090
 <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
   <a href="#menu">Menu</a>
   <a href="#events">Game Nights</a>
-  <a href="#rewards">Rewards</a>
   <a href="#about">Our Story</a>
   <a href="#visit">Visit Us</a>
-  <button class="btn btn-gold" data-open-order>Order Ahead</button>
+  <button class="btn btn-gold" data-open-order>Order Online</button>
+  <a class="mm-call" href="tel:+14233771954">Call (423) 377-1954</a>
 </nav>
 
 <main id="top">
@@ -393,19 +435,20 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090
   <div class="hero-grid"></div>
   <div class="wrap">
     <div>
-      <div class="badge"><span class="star">★</span> Veteran-Owned · Jacksboro, TN</div>
-      <h1>Refill<br>Your <span class="gold">Mana</span><span class="outline">.</span></h1>
-      <p class="lead">Handcrafted espresso, slow-steeped cold brew, and a lounge built for game nights. Grab a table, roll some dice, and stay awhile.</p>
+      <div class="badge"><span class="star">★</span> Veteran-Owned · Est. 2021 · Jacksboro, TN</div>
+      <h1>Your Quest<br>Starts With<br><span class="gold">Great Coffee</span><span class="outline">.</span></h1>
+      <p class="lead">Handcrafted syrups made from real, natural ingredients. A cozy corner of Campbell County where everyone belongs, from morning commuters to midnight dungeon masters.</p>
       <div class="hero-ctas">
-        <button class="btn btn-gold" data-open-order>Order Ahead
+        <button class="btn btn-gold" data-open-order>Order Online
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </button>
-        <a href="#menu" class="btn btn-ghost">See the Menu</a>
+        <a href="#events" class="btn btn-ghost">Game Night Schedule</a>
       </div>
       <div class="hero-stats">
-        <div><b>100%</b><span>Veteran-owned</span></div>
-        <div><b>Weekly</b><span>Game nights</span></div>
-        <div><b>Local</b><span>Campbell County</span></div>
+        <div><b>4.6★</b><span>Star rating</span></div>
+        <div><b>95/100</b><span>Health score</span></div>
+        <div><b>3 Nights</b><span>Weekly gaming</span></div>
+        <div><b>100%</b><span>Natural syrups</span></div>
       </div>
     </div>
     <div class="hero-art" aria-hidden="true">
@@ -427,16 +470,16 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090
           <path d="M119 146 132 163 119 180 106 163Z" fill="url(#g1)"/>
         </svg>
       </div>
-      <div class="floaty f1"><b>+50 XP</b>Every drink earns rewards</div>
-      <div class="floaty f2"><b>Fri 6PM</b>Board Game Night</div>
+      <div class="floaty f1"><b>Biscoff Latte</b>Our most-loved drink</div>
+      <div class="floaty f2"><b>Fri till 10PM</b>Magic: The Gathering</div>
     </div>
   </div>
 </section>
 
 <div class="ticker" aria-hidden="true">
   <div class="ticker-track">
-    <span>Espresso</span><span>Cold Brew</span><span>Board Games</span><span>Loose-Leaf Tea</span><span>Card Tournaments</span><span>Breakfast All Day</span><span>Veteran-Owned</span><span>Jacksboro, TN</span>
-    <span>Espresso</span><span>Cold Brew</span><span>Board Games</span><span>Loose-Leaf Tea</span><span>Card Tournaments</span><span>Breakfast All Day</span><span>Veteran-Owned</span><span>Jacksboro, TN</span>
+    <span>Biscoff Latte</span><span>Cold Brew</span><span>Magic: The Gathering</span><span>Medicine Ball Tea</span><span>Popping Boba</span><span>Dungeons &amp; Dragons</span><span>Ham Panini</span><span>Handcrafted Syrups</span><span>Veteran-Owned</span>
+    <span>Biscoff Latte</span><span>Cold Brew</span><span>Magic: The Gathering</span><span>Medicine Ball Tea</span><span>Popping Boba</span><span>Dungeons &amp; Dragons</span><span>Ham Panini</span><span>Handcrafted Syrups</span><span>Veteran-Owned</span>
   </div>
 </div>
 
@@ -444,18 +487,18 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090
 <section class="menu" id="menu">
   <div class="wrap">
     <div class="sec-head rv-in">
-      <span class="eyebrow">The Menu</span>
+      <span class="eyebrow">What We Serve</span>
       <h2>Choose Your <span class="gold">Loadout</span></h2>
-      <p class="lead">Every drink made to order. Tap <b style="color:var(--gold)">+</b> to add it to your order and skip the line.</p>
+      <p class="lead">Every syrup is handcrafted from scratch with real, natural ingredients. No shortcuts, no artificial flavors.</p>
     </div>
     <div class="tabs" role="tablist" aria-label="Menu categories">
       <button class="tab" role="tab" aria-selected="true" aria-controls="p-hot" id="t-hot">Hot</button>
       <button class="tab" role="tab" aria-selected="false" aria-controls="p-cold" id="t-cold" tabindex="-1">Cold</button>
-      <button class="tab" role="tab" aria-selected="false" aria-controls="p-tea" id="t-tea" tabindex="-1">Tea</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p-tea" id="t-tea" tabindex="-1">Tea &amp; More</button>
       <button class="tab" role="tab" aria-selected="false" aria-controls="p-food" id="t-food" tabindex="-1">Food</button>
     </div>
     <div id="menuPanels"></div>
-    <p class="menu-note">Oat, almond &amp; whole milk available · Extra shot +$0.75 · Sugar-free syrups on request</p>
+    <div class="menu-cta"><button class="btn btn-gold" data-open-order>Order for Pickup or Delivery</button></div>
   </div>
 </section>
 
@@ -463,57 +506,57 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090
 <section class="events" id="events">
   <div class="wrap">
     <div class="sec-head center rv-in">
-      <span class="eyebrow">Game Nights</span>
-      <h2>Every Week Is <span class="gold">Co-op</span></h2>
-      <p class="lead">A shelf full of games, big tables, and good coffee. Bring your crew or come solo. There's always a seat at the table.</p>
+      <span class="eyebrow">Every Week</span>
+      <h2>Game Night <span class="gold">Schedule</span></h2>
+      <p class="lead">Great coffee belongs in the middle of great community. Pull up a chair. All skill levels welcome.</p>
     </div>
     <div class="ev-grid">
       <article class="ev rv-in">
-        <div class="ev-day"><b>Tuesday</b><div class="ev-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="12" height="17" rx="2"/><path d="M18 6h1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H9"/></svg></div></div>
-        <h3>Card Clash</h3>
-        <p>Trading card game night. Bring your deck for casual play and friendly weekly tournaments.</p>
-        <div class="ev-meta"><span>6–9 PM</span><span>All levels</span></div>
+        <div class="ev-day"><b>Friday Night</b><div class="ev-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="12" height="17" rx="2"/><path d="M18 6h1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H9"/></svg></div></div>
+        <h3>Magic: The Gathering</h3>
+        <p>Come ready to play. We open late on Fridays just for the community. Bring your deck or borrow one.</p>
+        <div class="ev-meta"><span>Open until 10 PM</span></div>
       </article>
       <article class="ev rv-in">
-        <div class="ev-day"><b>Thursday</b><div class="ev-icon"><svg viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7Z"/><path d="M12 2v20M3 7l18 10M21 7 3 17"/></svg></div></div>
-        <h3>Dice &amp; Dragons</h3>
-        <p>Tabletop RPG campaigns and one-shots. New adventurers welcome. We'll roll you a character.</p>
-        <div class="ev-meta"><span>6–10 PM</span><span>Ages 13+</span></div>
+        <div class="ev-day"><b>Saturday Night</b><div class="ev-icon"><svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg></div></div>
+        <h3>Hunt a Killer</h3>
+        <p>A mystery game experience like no other. Work together to crack the case over great coffee. Just bring your curiosity.</p>
+        <div class="ev-meta"><span>Check in for start time</span></div>
       </article>
       <article class="ev rv-in">
-        <div class="ev-day"><b>Friday</b><div class="ev-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.3"/><circle cx="16" cy="16" r="1.3"/><circle cx="12" cy="12" r="1.3"/></svg></div></div>
-        <h3>Board Game Night</h3>
-        <p>Pull anything off our game shelf. Strategy, party games, classics. Perfect for date night or the whole family.</p>
-        <div class="ev-meta"><span>6–10 PM</span><span>Family-friendly</span></div>
+        <div class="ev-day"><b>Sunday Night</b><div class="ev-icon"><svg viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7Z"/><path d="M12 2v20M3 7l18 10M21 7 3 17"/></svg></div></div>
+        <h3>Dungeons &amp; Dragons</h3>
+        <p>Seasoned adventurer or rolling your first character, you're welcome here. DM on site. Just show up.</p>
+        <div class="ev-meta"><span>All adventurers welcome</span></div>
       </article>
       <article class="ev rv-in">
-        <div class="ev-day"><b>Saturday</b><div class="ev-icon"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="6"/><path d="M7 10v4M5 12h4"/><circle cx="16" cy="11" r="1"/><circle cx="18" cy="13" r="1"/></svg></div></div>
-        <h3>Console Clash</h3>
-        <p>Retro and modern console tournaments on the big screen. Bragging rights and a free drink for the champ.</p>
-        <div class="ev-meta"><span>2–6 PM</span><span>Prizes</span></div>
+        <div class="ev-day"><b>Any Day</b><div class="ev-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.3"/><circle cx="16" cy="16" r="1.3"/><circle cx="12" cy="12" r="1.3"/></svg></div></div>
+        <h3>Open Table</h3>
+        <p>Board games and card games are always on the shelf. Walk in, grab a table and play any day we're open.</p>
+        <div class="ev-meta"><span>Walk-ins welcome</span></div>
       </article>
     </div>
-    <div class="ev-cta rv-in"><a href="#visit" class="btn btn-ghost">Reserve a Table</a></div>
+    <p class="ev-note rv-in"><b>Flexible hours for gamers.</b> If a game is running, we stay open.</p>
   </div>
 </section>
 
-<!-- ===== REWARDS ===== -->
-<section class="xp" id="rewards">
+<!-- ===== WHY LOCALS LOVE IT ===== -->
+<section class="xp" id="love">
   <div class="wrap">
     <div class="xp-box rv-in">
       <div>
-        <span class="eyebrow">Mana Rewards</span>
-        <h2 style="margin:14px 0 18px">Level Up <span class="gold">Every Sip</span></h2>
-        <p class="lead">Every dollar earns XP. Climb the ranks and unlock free drinks, game-night perks, and exclusive merch. Ask at the counter to start your save file.</p>
+        <span class="eyebrow">Why Jacksboro Keeps Coming Back</span>
+        <h2 style="margin:14px 0 18px">Made From <span class="gold">Scratch</span></h2>
+        <p class="lead">We handcraft every batch of syrup using real, natural ingredients. From the Biscoff Latte to the Apple Pie Latte, every flavor starts in our own kitchen.</p>
         <div class="bar"><i id="xpBar"></i></div>
-        <div class="bar-lbl"><span>Lvl 2 · Regular</span><span>340 / 500 XP</span></div>
-        <button class="btn btn-gold" data-open-order>Start Earning</button>
+        <div class="bar-lbl"><span>Natural ingredients</span><span>100%</span></div>
+        <button class="btn btn-gold" data-open-order>Order Online</button>
       </div>
       <div class="levels">
-        <div class="lvl"><div class="lvl-n">1</div><div><b>Recruit</b><small>Free drink on your birthday</small></div><em>0 XP</em></div>
-        <div class="lvl"><div class="lvl-n">2</div><div><b>Regular</b><small>Free size upgrade, every visit</small></div><em>250 XP</em></div>
-        <div class="lvl"><div class="lvl-n">3</div><div><b>Veteran</b><small>Every 10th drink free</small></div><em>750 XP</em></div>
-        <div class="lvl max"><div class="lvl-n">★</div><div><b>Legend</b><small>Reserved game-night seat + merch drop</small></div><em>1500 XP</em></div>
+        <div class="lvl"><div class="lvl-n">★</div><div><b>4.6-Star Rating</b><small>Loved by Campbell County regulars</small></div></div>
+        <div class="lvl"><div class="lvl-n">95</div><div><b>Health Score 95/100</b><small>A clean kitchen you can trust</small></div></div>
+        <div class="lvl"><div class="lvl-n">3</div><div><b>Game Nights Weekly</b><small>Magic, Hunt a Killer and D&amp;D</small></div></div>
+        <div class="lvl max"><div class="lvl-n">♿</div><div><b>Easy to Visit</b><small>Free parking · Wheelchair accessible</small></div></div>
       </div>
     </div>
   </div>
@@ -536,35 +579,21 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090
         <circle cx="100" cy="150" r="58" fill="none" stroke="url(#m1)" stroke-width="1.5" stroke-dasharray="3 5"/>
         <path d="M100 104l12.9 26.2 28.9 4.2-20.9 20.4 4.9 28.8L100 170l-25.8 13.6 4.9-28.8-20.9-20.4 28.9-4.2Z" fill="url(#m1)"/>
       </svg>
-      <div class="cap"><b>Served Our Country.</b>Now serving our community.</div>
+      <div class="branches"><span>U.S. Army</span><span>U.S. Navy</span></div>
+      <div class="cap"><b>Est. October 2021</b>310 Main St · Jacksboro, TN</div>
     </div>
     <div class="about-copy rv-in">
       <span class="eyebrow">Our Story</span>
-      <h2 style="margin:14px 0 26px">From Service <span class="gold">To Espresso</span></h2>
-      <p>Manahouse Coffee was founded by a <strong>U.S. military veteran</strong> who learned that the best missions end around a table: a hot cup of coffee in hand, trading stories with the people who had your back.</p>
-      <p>We built Manahouse to be that table for <strong>Jacksboro and Campbell County</strong>. It's a place where neighbors become regulars, strangers become game-night teammates, and every cup is made with the same care and discipline learned in uniform.</p>
-      <p>In gaming, <em>mana</em> is the energy that powers your next move. We think a great cup of coffee does the same.</p>
+      <h2 style="margin:14px 0 26px">Coffee Served <span class="gold">With Purpose</span></h2>
+      <p>Manahouse Coffee is <strong>veteran-owned and operated</strong>. It was co-founded by <strong>Donald Leatherwood (U.S. Army)</strong> and <strong>Amanda Baker (U.S. Navy)</strong>, two people who traveled the country, fell in love with Campbell County, and decided to put down roots here.</p>
+      <p>What started as a dream to build community became a beloved gathering place for Jacksboro. <strong>Every syrup is handcrafted from scratch</strong> using real, natural ingredients.</p>
+      <p>We believe great coffee belongs in the middle of great community. That's why we host game nights, keep our doors open late on Fridays, and make sure everyone who walks in feels genuinely welcome.</p>
       <div class="values">
-        <div class="val"><b>Discipline</b><span>Every drink dialed in, every time.</span></div>
+        <div class="val"><b>Handcrafted</b><span>Every syrup made in-house from scratch.</span></div>
         <div class="val"><b>Community</b><span>A seat at the table for everyone.</span></div>
-        <div class="val"><b>Service</b><span>Veterans &amp; first responders get 10% off.</span></div>
+        <div class="val"><b>Service</b><span>Army and Navy veterans behind the counter.</span></div>
       </div>
-      <p class="quote">"No one gets left behind, <span class="gold">especially not before coffee.</span>"</p>
-    </div>
-  </div>
-</section>
-
-<!-- ===== REVIEWS ===== -->
-<section class="reviews">
-  <div class="wrap">
-    <div class="sec-head center rv-in">
-      <span class="eyebrow">Player Reviews</span>
-      <h2>What The <span class="gold">Party</span> Says</h2>
-    </div>
-    <div class="rv-grid">
-      <figure class="rv rv-in"><div class="stars">★★★★★</div><p>"Best latte in Campbell County, and I didn't expect to lose three hours playing board games with people I just met. Coming back Friday."</p><cite>Sample review · Replace with Google review</cite></figure>
-      <figure class="rv rv-in"><div class="stars">★★★★★</div><p>"Finally a place in Jacksboro where my kids and I can hang out together. The staff taught us two new games and the cold brew is incredible."</p><cite>Sample review · Replace with Google review</cite></figure>
-      <figure class="rv rv-in"><div class="stars">★★★★★</div><p>"Love supporting a veteran-owned business. You can tell they take pride in every cup. The whole place just feels welcoming."</p><cite>Sample review · Replace with Google review</cite></figure>
+      <p class="quote">"Every cup is crafted with <span class="gold">care and passion.</span>"</p>
     </div>
   </div>
 </section>
@@ -573,27 +602,30 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090
 <section id="visit">
   <div class="wrap">
     <div class="sec-head rv-in">
-      <span class="eyebrow">Hours &amp; Location</span>
-      <h2>Your Next <span class="gold">Checkpoint</span></h2>
+      <span class="eyebrow">Come See Us</span>
+      <h2>Hours &amp; <span class="gold">Location</span></h2>
     </div>
     <div class="visit-grid">
       <div class="vcard rv-in">
         <h3>Hours <span class="status" id="status">—</span></h3>
         <ul class="hours" id="hours"></ul>
+        <p class="fine">✦ Extended Friday hours for game night. Hours may flex, so check Facebook for same-day updates.</p>
       </div>
       <div class="vcard rv-in">
         <h3>Find Us</h3>
         <ul class="contact-list">
           <li><svg viewBox="0 0 24 24"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg>
-            <div><small>Address</small><a href="https://www.google.com/maps/search/?api=1&query=Manahouse+Coffee+Jacksboro+TN" target="_blank" rel="noopener">Jacksboro, TN 37757<br>Get directions →</a></div></li>
+            <div><small>Address</small><a href="https://www.google.com/maps/search/?api=1&query=310+Main+St+Jacksboro+TN+37757" target="_blank" rel="noopener">310 Main Street<br>Jacksboro, TN 37757<br><span class="gold">Get directions →</span></a></div></li>
           <li><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg>
-            <div><small>Phone</small><a href="tel:+10000000000">(423) 000-0000</a></div></li>
-          <li><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5"/></svg>
-            <div><small>Social</small><a href="#">@manahousecoffee</a></div></li>
+            <div><small>Phone</small><a href="tel:+14233771954">(423) 377-1954</a></div></li>
+          <li><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="7" rx="2"/><path d="M5 11l2-5h10l2 5M7 18v2M17 18v2"/></svg>
+            <div><small>Parking &amp; Access</small>In the Pointe Center (former Radio Shack building). Free parking · Wheelchair accessible</div></li>
+          <li><svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h6l-3-8H8M15 6h3l3 11"/></svg>
+            <div><small>Delivery</small>Available on DoorDash &amp; Uber Eats</div></li>
         </ul>
       </div>
       <div class="map rv-in">
-        <iframe title="Map to Manahouse Coffee" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Manahouse%20Coffee%20Jacksboro%20TN&z=14&output=embed"></iframe>
+        <iframe title="Map to Manahouse Coffee, 310 Main St, Jacksboro TN" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=310%20Main%20St%2C%20Jacksboro%2C%20TN%2037757&z=16&output=embed"></iframe>
       </div>
     </div>
   </div>
@@ -604,8 +636,11 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090
   <div class="wrap rv-in">
     <span class="eyebrow">Press Start</span>
     <h2 style="margin-top:14px">Your Table <span class="gold">Is Waiting</span></h2>
-    <p class="lead">Order ahead and it'll be hot and ready when you walk in.</p>
-    <button class="btn btn-gold" data-open-order>Order Ahead</button>
+    <p class="lead">Stop by 310 Main Street, or get your Biscoff Latte delivered.</p>
+    <div class="hero-ctas" style="justify-content:center">
+      <button class="btn btn-gold" data-open-order>Order Online</button>
+      <a href="tel:+14233771954" class="btn btn-ghost">Call the Shop</a>
+    </div>
   </div>
 </section>
 </main>
@@ -619,115 +654,101 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090
           <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4 56 32 32 60 8 32Z" fill="none" stroke="#e8a83a" stroke-width="3.5"/><path d="M32 18 44 32 32 46 20 32Z" fill="#e8a83a"/></svg>
           <span class="logo-txt">MANA<span>HOUSE</span></span>
         </a>
-        <p>Veteran-owned coffee &amp; gaming lounge proudly serving Jacksboro and Campbell County, Tennessee.</p>
+        <p>Veteran-owned · Handcrafted · Proudly serving Jacksboro and Campbell County, Tennessee since 2021.</p>
         <div class="socials">
-          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3Z"/></svg></a>
-          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5"/></svg></a>
-          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M9 12a4 4 0 1 0 4 4V2c1 3 3 5 6 5"/></svg></a>
+          <a href="https://www.facebook.com/search/top?q=Manahouse%20Coffee%20Jacksboro" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3Z"/></svg></a>
+          <a href="tel:+14233771954" aria-label="Call"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg></a>
+          <a href="https://www.google.com/maps/search/?api=1&query=310+Main+St+Jacksboro+TN+37757" target="_blank" rel="noopener" aria-label="Directions"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg></a>
         </div>
       </div>
       <div>
         <h4>Explore</h4>
-        <ul><li><a href="#menu">Menu</a></li><li><a href="#events">Game Nights</a></li><li><a href="#rewards">Mana Rewards</a></li><li><a href="#about">Our Story</a></li></ul>
+        <ul><li><a href="#menu">Menu</a></li><li><a href="#events">Game Nights</a></li><li><a href="#about">Our Story</a></li><li><a href="#visit">Hours</a></li></ul>
       </div>
       <div>
         <h4>Visit</h4>
-        <ul><li><a href="#visit">Hours</a></li><li><a href="https://www.google.com/maps/search/?api=1&query=Manahouse+Coffee+Jacksboro+TN" target="_blank" rel="noopener">Directions</a></li><li><a href="#" data-open-order>Order Ahead</a></li></ul>
+        <ul><li>310 Main St<br>Jacksboro, TN 37757</li><li><a href="tel:+14233771954">(423) 377-1954</a></li><li><a href="#" data-open-order>Order Online</a></li></ul>
       </div>
     </div>
     <div class="legal">
-      <span>© <span id="yr"></span> Manahouse Coffee · Jacksboro, TN</span>
+      <span>© <span id="yr"></span> Manahouse Coffee · 310 Main St, Jacksboro, TN 37757</span>
       <span>Website by <a href="#">Beacon865</a></span>
     </div>
   </div>
 </footer>
 
-<!-- cart button -->
-<button class="cart-fab" id="cartFab" data-open-order aria-label="View order"><span class="count" id="cartCount">0</span> View Order</button>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-
 <!-- ===== ORDER MODAL ===== -->
 <div class="overlay" id="overlay" aria-hidden="true">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div id="orderView">
-      <div class="modal-head">
-        <h3 id="modalTitle">Your <span class="gold">Order</span></h3>
-        <button class="x" data-close aria-label="Close">×</button>
-      </div>
-      <p class="sub">Pickup at the counter. Pay when you arrive.</p>
-      <ul class="cart-list" id="cartList"></ul>
-      <div class="empty-cart" id="emptyCart">Your inventory is empty.<br><a href="#menu" data-close style="color:var(--gold);font-weight:700">Browse the menu →</a></div>
-      <div class="total"><span>Total</span><b id="cartTotal">$0.00</b></div>
-      <form id="orderForm" novalidate>
-        <div class="row2">
-          <div class="field"><label for="oName">Name</label><input id="oName" required autocomplete="given-name" placeholder="Player one"></div>
-          <div class="field"><label for="oPhone">Phone</label><input id="oPhone" type="tel" required autocomplete="tel" placeholder="(423) 555-0123"></div>
-        </div>
-        <div class="field"><label for="oTime">Pickup time</label>
-          <select id="oTime"><option>ASAP (~10 min)</option><option>In 20 minutes</option><option>In 30 minutes</option><option>In 45 minutes</option></select>
-        </div>
-        <button class="btn btn-gold" type="submit">Place Order</button>
-      </form>
+    <div class="modal-head">
+      <h3 id="modalTitle">Order From <span class="gold">Manahouse</span></h3>
+      <button class="x" data-close aria-label="Close">×</button>
     </div>
-    <div id="successView" class="success" hidden>
-      <div class="check"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></div>
-      <h3>Quest <span class="gold">Accepted</span></h3>
-      <p id="successMsg"></p>
-      <button class="btn btn-gold" data-close>Back to the Lounge</button>
-    </div>
+    <p class="sub">Pick your platform for delivery or pickup, or call the shop directly.</p>
+    <a class="order-opt dd" href="https://www.doordash.com/search/store/manahouse%20coffee/" target="_blank" rel="noopener">
+      <span class="oi">DD</span><span><b>Order on DoorDash</b><small>Delivery or pickup</small></span><span class="arr">→</span>
+    </a>
+    <a class="order-opt ue" href="https://www.ubereats.com/search?q=Manahouse%20Coffee" target="_blank" rel="noopener">
+      <span class="oi">UE</span><span><b>Order on Uber Eats</b><small>Delivery or pickup</small></span><span class="arr">→</span>
+    </a>
+    <a class="order-opt call" href="tel:+14233771954">
+      <span class="oi">☎</span><span><b>Call Ahead</b><small>(423) 377-1954</small></span><span class="arr">→</span>
+    </a>
+    <p class="modal-open" id="modalOpen"></p>
   </div>
 </div>
 
 <script>
 (() => {
-  // ---------- DATA (edit prices & hours here) ----------
+  // ---------- DATA (edit menu & hours here) ----------
   const MENU = {
     hot: [
-      {n:"Mana Potion Latte", p:5.75, d:"Our signature. Double espresso, house honey-lavender, steamed milk, gold shimmer.", t:"Signature", sig:true},
-      {n:"Drip of the Day", p:2.75, d:"Fresh-brewed single origin. Free refills while you play.", t:"Refills"},
-      {n:"Americano", p:3.50, d:"Two shots of espresso over hot water. Bold and clean.", t:""},
-      {n:"Salted Caramel Latte", p:5.25, d:"Espresso, house caramel, sea salt, steamed milk.", t:"Fan Fav"},
-      {n:"Cappuccino", p:4.25, d:"Equal parts espresso, steamed milk and velvet foam.", t:""},
-      {n:"Mocha Mission", p:5.25, d:"Espresso, dark chocolate, steamed milk, whipped cream.", t:""}
+      {n:"Biscoff Latte", d:"Our most-loved drink. A rich latte with handcrafted Biscoff syrup that tastes exactly like the cookie.", t:"Fan Favorite", sig:true},
+      {n:"Cinnamon Roll Latte", d:"Cinnamon brown sugar with vanilla sweet cream and a cinnamon sprinkle on top. Because what's a cinnamon roll without frosting?", t:""},
+      {n:"Mound Latte", d:"Chocolate and coconut, inspired by the classic candy bar. Great hot or iced.", t:""},
+      {n:"Peppermint Bark Latte", d:"Peppermint and mocha in a cozy hot latte. A festive treat.", t:"Seasonal"},
+      {n:"Apple Pie Latte", d:"Homemade apple pie syrup with vanilla sweet cream to get you in the autumn spirit.", t:"Seasonal"},
+      {n:"Black Coffee", d:"Classic drip coffee, hot and fresh. Simple, reliable, perfect.", t:""}
     ],
     cold: [
-      {n:"Elixir Cold Brew", p:4.75, d:"Steeped 20 hours. Smooth, low-acid, dangerously strong.", t:"Signature", sig:true},
-      {n:"Iced Vanilla Latte", p:5.00, d:"Espresso, Madagascar vanilla, milk over ice.", t:""},
-      {n:"Critical Hit Frappe", p:5.75, d:"Blended caramel, espresso, cookie crumble, whip.", t:"Fan Fav"},
-      {n:"Sweet Cream Nitro", p:5.50, d:"Nitro cold brew topped with house vanilla sweet cream.", t:""},
-      {n:"Iced Mocha", p:5.25, d:"Espresso, dark chocolate and milk over ice.", t:""},
-      {n:"Energy Refresher", p:4.75, d:"Berry or mango, lightly caffeinated, shaken with ice.", t:"No Coffee"}
+      {n:"Cold Brew", d:"Slow-steeped and smooth. Rich, naturally sweet, and perfect every single time.", t:"Fan Favorite", sig:true},
+      {n:"Iced Caramel Macchiato", d:"Classic vanilla and caramel layers over ice. Clean, satisfying, endlessly refreshing.", t:"Fan Favorite"},
+      {n:"Iced Snickers", d:"Chocolate, caramel and a hint of peanut. Dessert in a cup.", t:""},
+      {n:"Orange Creamsicle Cold Brew", d:"A playful twist on cold brew with a citrus cream swirl. Summer in every sip.", t:"Seasonal"},
+      {n:"Iced Mound Latte", d:"Chocolate and coconut over ice. The candy bar experience, cold.", t:""},
+      {n:"Vanilla Latte", d:"A timeless classic. Espresso, milk and our handcrafted vanilla syrup over ice.", t:""}
     ],
     tea: [
-      {n:"Healing Chai", p:4.75, d:"Spiced black tea, steamed milk, cinnamon dust.", t:"Signature", sig:true},
-      {n:"Matcha Latte", p:5.25, d:"Ceremonial-grade matcha whisked with your choice of milk.", t:""},
-      {n:"London Fog", p:4.50, d:"Earl Grey, vanilla, steamed milk.", t:""},
-      {n:"Southern Sweet Tea", p:2.75, d:"It's Tennessee. Brewed fresh daily.", t:"Local"},
-      {n:"Loose-Leaf Pot", p:3.75, d:"Rotating selection of green, black and herbal teas.", t:""},
-      {n:"Hot Cocoa", p:3.50, d:"Rich chocolate, steamed milk, marshmallows. Kid-approved.", t:"Kids"}
+      {n:"Medicine Ball Tea", d:"A soothing, warming blend. Pairs beautifully with our popping boba.", t:"Customer Obsession", sig:true},
+      {n:"Popping Boba Combos", d:"Add a burst of fun to any tea or drink with colorful popping boba.", t:""},
+      {n:"Mana Bloom", d:"Our specialty infusion. Lightly floral and refreshing. Ask about today's flavor.", t:"House Special"},
+      {n:"Lemonade", d:"Fresh and bright. Served plain or as the base for our fruit infusion blends.", t:""}
     ],
     food: [
-      {n:"The Rations Biscuit", p:6.50, d:"Buttermilk biscuit, sausage, egg, cheddar. Built for long campaigns.", t:"Signature", sig:true},
-      {n:"Avocado Toast", p:7.50, d:"Sourdough, smashed avocado, chili flake, everything seasoning.", t:""},
-      {n:"Loaded Bagel", p:4.50, d:"Toasted bagel with cream cheese or butter and jam.", t:""},
-      {n:"Blueberry Muffin", p:3.50, d:"Baked fresh every morning.", t:""},
-      {n:"Party Platter", p:14.00, d:"Shareable snacks for your game table: pretzels, cheese, fruit, cookies.", t:"Share"},
-      {n:"Cookie Loot Drop", p:2.75, d:"Chocolate chunk, sugar or peanut butter. Warm on request.", t:""}
+      {n:"Ham Panini", d:"Freshly pressed and packed with flavor. One of our most-ordered items.", t:"Best Seller", sig:true},
+      {n:"Classic Panini", d:"A toasty, satisfying classic that pairs perfectly with any drink on the menu.", t:"Fan Favorite"},
+      {n:"Donuts", d:"Fresh, sweet, and the perfect companion to your morning coffee.", t:""},
+      {n:"Muffins", d:"Baked and wholesome. Ask about today's variety.", t:""}
     ]
   };
-  // 0=Sun … 6=Sat ; [openHour, closeHour] 24h, null = closed
-  const HOURS = [[8,16],[7,18],[7,21],[7,18],[7,21],[7,22],[8,22]];
+  // 0=Sun … 6=Sat ; [open, close] in 24h Eastern time, null = closed
+  const HOURS = [[8,18],[7,18],[7,18],[7,18],[7,18],[7,22],[8,18]];
   const DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
   const $ = s => document.querySelector(s);
   const $$ = s => [...document.querySelectorAll(s)];
-  const money = n => "$" + n.toFixed(2);
   const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
   // ---------- NAV ----------
   const nav = $("#nav"), burger = $("#burger"), mm = $("#mobileMenu");
-  const onScroll = () => nav.classList.toggle("scrolled", scrollY > 30);
-  addEventListener("scroll", onScroll, {passive:true}); onScroll();
+  const ann = $("#announce");
+  const onScroll = () => {
+    const top = Math.max(0, ann.offsetHeight - scrollY);
+    nav.style.top = top + "px";
+    mm.style.top = (top + nav.offsetHeight) + "px";
+    nav.classList.toggle("scrolled", scrollY > 30);
+  };
+  addEventListener("scroll", onScroll, {passive:true}); addEventListener("resize", onScroll); onScroll();
   const setMenu = open => {
     burger.setAttribute("aria-expanded", open);
     burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
@@ -743,12 +764,11 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090
     const div = document.createElement("div");
     div.className = "panel" + (i === 0 ? " active" : "");
     div.id = "p-" + key; div.setAttribute("role","tabpanel"); div.setAttribute("aria-labelledby","t-" + key);
-    div.innerHTML = items.map((it, j) => `
+    div.innerHTML = items.map(it => `
       <article class="item${it.sig ? " signature" : ""}">
-        <div class="item-top"><h3>${esc(it.n)}</h3><span class="price">${money(it.p)}</span></div>
+        <h3>${esc(it.n)}</h3>
         <p>${esc(it.d)}</p>
-        <div class="item-foot"><span class="tag${it.t ? "" : " empty"}">${esc(it.t)}</span>
-          <button class="add" data-add="${key}:${j}" aria-label="Add ${esc(it.n)} to order">+</button></div>
+        ${it.t ? `<div class="item-foot"><span class="tag">${esc(it.t)}</span></div>` : ""}
       </article>`).join("");
     panels.appendChild(div);
   });
@@ -765,43 +785,35 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090
     });
   });
 
-  // ---------- CART ----------
-  const cart = new Map();
-  const toast = $("#toast"); let toastT;
-  const showToast = msg => { toast.textContent = msg; toast.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove("show"), 1800); };
-  const renderCart = () => {
-    let count = 0, total = 0;
-    $("#cartList").innerHTML = [...cart].map(([id, q]) => {
-      const [k, j] = id.split(":"), it = MENU[k][j];
-      count += q; total += q * it.p;
-      return `<li><span class="nm">${esc(it.n)}</span>
-        <span class="qty"><button data-dec="${id}" aria-label="Remove one">−</button><span>${q}</span><button data-inc="${id}" aria-label="Add one">+</button></span>
-        <span class="pr">${money(q * it.p)}</span></li>`;
-    }).join("");
-    $("#cartCount").textContent = count;
-    $("#cartTotal").textContent = money(total);
-    $("#emptyCart").hidden = count > 0;
-    $("#orderForm").hidden = count === 0;
-    $("#cartFab").classList.toggle("show", count > 0);
-    return {count, total};
-  };
-  document.addEventListener("click", e => {
-    const add = e.target.closest("[data-add]"), inc = e.target.closest("[data-inc]"), dec = e.target.closest("[data-dec]");
-    if (add) {
-      const id = add.dataset.add; cart.set(id, (cart.get(id) || 0) + 1); renderCart();
-      add.classList.remove("pop"); void add.offsetWidth; add.classList.add("pop");
-      const [k, j] = id.split(":"); showToast("+ " + MENU[k][j].n + " added");
+  // ---------- HOURS + OPEN NOW (shop's local time) ----------
+  const fmt = h => { const s = h >= 12 ? "PM" : "AM"; const x = h % 12 || 12; return x + " " + s; };
+  let today, hr;
+  try {
+    const parts = new Intl.DateTimeFormat("en-US", {timeZone:"America/New_York", weekday:"short", hour:"numeric", minute:"numeric", hourCycle:"h23"}).formatToParts(new Date());
+    const get = t => parts.find(p => p.type === t).value;
+    today = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(get("weekday"));
+    hr = +get("hour") + +get("minute") / 60;
+  } catch (e) { const d = new Date(); today = d.getDay(); hr = d.getHours() + d.getMinutes() / 60; }
+  $("#hours").innerHTML = [1,2,3,4,5,6,0].map(d => {
+    const h = HOURS[d], late = h && h[1] > 18;
+    return `<li class="${d === today ? "today" : ""}"><span>${DAYS[d]}</span><span class="${late ? "late" : ""}">${h ? fmt(h[0]) + " – " + fmt(h[1]) + (late ? " ✦" : "") : "Closed"}</span></li>`;
+  }).join("");
+  const h = HOURS[today], open = !!h && hr >= h[0] && hr < h[1];
+  const st = $("#status"); st.textContent = open ? "Open Now" : "Closed"; st.className = "status " + (open ? "open" : "closed");
+  let nextMsg = "";
+  if (open) nextMsg = `Open now until ${fmt(h[1])}.`;
+  else {
+    for (let i = 0; i < 7; i++) {
+      const d = (today + i) % 7, hh = HOURS[d];
+      if (hh && (i > 0 || hr < hh[0])) { nextMsg = `Closed now. Opens ${i === 0 ? "today" : i === 1 ? "tomorrow" : DAYS[d]} at ${fmt(hh[0])}.`; break; }
     }
-    if (inc) { cart.set(inc.dataset.inc, cart.get(inc.dataset.inc) + 1); renderCart(); }
-    if (dec) { const q = cart.get(dec.dataset.dec) - 1; q > 0 ? cart.set(dec.dataset.dec, q) : cart.delete(dec.dataset.dec); renderCart(); }
-  });
+  }
+  $("#modalOpen").textContent = nextMsg;
 
   // ---------- MODAL ----------
   const overlay = $("#overlay"); let lastFocus;
   const openModal = () => {
     lastFocus = document.activeElement;
-    $("#orderView").hidden = false; $("#successView").hidden = true;
-    renderCart();
     overlay.classList.add("open"); overlay.setAttribute("aria-hidden","false");
     document.body.style.overflow = "hidden";
     setTimeout(() => overlay.querySelector(".x").focus(), 50);
@@ -816,43 +828,21 @@ footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#090
   addEventListener("keydown", e => {
     if (e.key === "Escape") { if (overlay.classList.contains("open")) closeModal(); else setMenu(false); }
     if (e.key === "Tab" && overlay.classList.contains("open")) {
-      const f = [...overlay.querySelectorAll("button,input,select,a[href]")].filter(el => !el.closest("[hidden]") && el.offsetParent);
-      if (!f.length) return;
+      const f = [...overlay.querySelectorAll("button,a[href]")];
       if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length-1].focus(); }
       else if (!e.shiftKey && document.activeElement === f[f.length-1]) { e.preventDefault(); f[0].focus(); }
     }
   });
-  $("#orderForm").addEventListener("submit", e => {
-    e.preventDefault();
-    const name = $("#oName"), phone = $("#oPhone");
-    let ok = true;
-    [name, phone].forEach(f => { const bad = !f.value.trim(); f.style.borderColor = bad ? "var(--bad)" : ""; if (bad) ok = false; });
-    if (!ok) { showToast("Add your name and phone"); return; }
-    const {count, total} = renderCart();
-    $("#successMsg").textContent = `Thanks, ${name.value.trim()}! Your ${count} item${count > 1 ? "s" : ""} (${money(total)}) will be ready ${$("#oTime").value.toLowerCase().replace("asap (~10 min)","in about 10 minutes")}. Pay at the counter.`;
-    $("#orderView").hidden = true; $("#successView").hidden = false;
-    cart.clear(); renderCart(); e.target.reset();
-    $("#successView .btn").focus();
-  });
 
-  // ---------- HOURS + OPEN NOW ----------
-  const fmt = h => { const s = h >= 12 ? "PM" : "AM"; const x = h % 12 || 12; return x + " " + s; };
-  const now = new Date(), today = now.getDay(), hr = now.getHours() + now.getMinutes() / 60;
-  const order = [1,2,3,4,5,6,0];
-  $("#hours").innerHTML = order.map(d => `<li class="${d === today ? "today" : ""}"><span>${DAYS[d]}</span><span>${HOURS[d] ? fmt(HOURS[d][0]) + " – " + fmt(HOURS[d][1]) : "Closed"}</span></li>`).join("");
-  const h = HOURS[today], open = h && hr >= h[0] && hr < h[1];
-  const st = $("#status"); st.textContent = open ? "Open Now" : "Closed"; st.className = "status " + (open ? "open" : "closed");
-
-  // ---------- REVEAL + XP BAR ----------
+  // ---------- REVEAL + BAR ----------
   const io = new IntersectionObserver(es => es.forEach(en => {
     if (en.isIntersecting) { en.target.classList.add("seen"); io.unobserve(en.target); }
   }), {threshold:.12});
   $$(".rv-in").forEach(el => io.observe(el));
-  const xo = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { $("#xpBar").style.width = "68%"; xo.disconnect(); } }), {threshold:.4});
+  const xo = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { $("#xpBar").style.width = "100%"; xo.disconnect(); } }), {threshold:.4});
   xo.observe($("#xpBar"));
 
-  $("#yr").textContent = now.getFullYear();
-  renderCart();
+  $("#yr").textContent = new Date().getFullYear();
 })();
 </script>
 </body>

@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manahouse Coffee | Veteran-Owned Coffee &amp; Gaming Lounge in Jacksboro, TN</title>
+<meta name="description" content="Manahouse Coffee is a veteran-owned coffee shop and gaming lounge in Jacksboro, Tennessee. Handcrafted espresso, cold brew, tea, food, and weekly Game Nights.">
+<meta name="theme-color" content="#0b0b0d">
+<meta property="og:title" content="Manahouse Coffee | Jacksboro, TN">
+<meta property="og:description" content="Veteran-owned coffee and gaming lounge. Refill your mana.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0b0d'/%3E%3Cpath d='M32 8 52 32 32 56 12 32Z' fill='none' stroke='%23d4a843' stroke-width='5'/%3E%3Cpath d='M32 20 42 32 32 44 22 32Z' fill='%23d4a843'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CafeOrCoffeeShop",
+  "name": "Manahouse Coffee",
+  "description": "Veteran-owned coffee shop and gaming lounge.",
+  "servesCuisine": ["Coffee", "Tea", "Breakfast", "Pastries"],
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Jacksboro",
+    "addressRegion": "TN",
+    "addressCountry": "US"
+  }
+}
+</script>
+<style>
+:root{
+  --bg:#0b0b0d;
+  --bg-2:#121216;
+  --card:#17171c;
+  --card-2:#1d1d24;
+  --line:rgba(212,168,67,.18);
+  --line-soft:rgba(255,255,255,.07);
+  --gold:#d4a843;
+  --gold-hi:#f3cf6e;
+  --gold-lo:#9c7a2a;
+  --text:#f2eee6;
+  --muted:#a29d93;
+  --ok:#4ade80;
+  --bad:#f87171;
+  --radius:16px;
+  --max:1180px;
+  --display:'Bebas Neue',Impact,'Arial Narrow',sans-serif;
+  --body:'Lato',system-ui,-apple-system,Segoe UI,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+.eyebrow{font-family:var(--body);font-weight:900;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:.02em;line-height:.95}
+h2{font-size:clamp(44px,7vw,84px)}
+h2 .gold,h1 .gold{color:var(--gold)}
+.lead{color:var(--muted);font-size:clamp(17px,1.6vw,19px);max-width:620px}
+section{padding:110px 0;position:relative}
+.sec-head{display:flex;flex-direction:column;gap:14px;margin-bottom:52px}
+.sec-head.center{align-items:center;text-align:center}
+.sec-head.center .lead{margin:0 auto}
+
+/* grain + glow atmosphere */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 28px;border-radius:999px;font-weight:900;font-size:14px;letter-spacing:.14em;text-transform:uppercase;transition:transform .2s,box-shadow .2s,background .2s,color .2s;white-space:nowrap}
+.btn-gold{background:linear-gradient(135deg,var(--gold-hi),var(--gold) 45%,var(--gold-lo));color:#140f02;box-shadow:0 10px 30px -10px rgba(212,168,67,.7)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 16px 40px -10px rgba(212,168,67,.9)}
+.btn-ghost{border:1.5px solid var(--line);color:var(--text)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ===== NAV ===== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .3s,border-color .3s,backdrop-filter .3s;border-bottom:1px solid transparent}
+.nav.scrolled{background:rgba(11,11,13,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line-soft)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:74px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo svg{width:38px;height:38px}
+.logo-txt{font-family:var(--display);font-size:28px;letter-spacing:.06em;line-height:1}
+.logo-txt span{color:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:34px;list-style:none}
+.nav-links a{font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--gold)}
+.nav-links .btn{padding:11px 22px;font-size:12px}
+.nav-links .btn-gold{color:#140f02}
+.burger{display:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);position:relative}
+.burger span{position:absolute;left:12px;right:12px;height:2px;background:var(--gold);transition:transform .3s,opacity .3s}
+.burger span:nth-child(1){top:15px}.burger span:nth-child(2){top:21px}.burger span:nth-child(3){top:27px}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.mobile-menu{position:fixed;inset:74px 0 0 0;background:rgba(11,11,13,.97);backdrop-filter:blur(10px);z-index:49;display:flex;flex-direction:column;padding:40px 24px;gap:6px;transform:translateY(-12px);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s}
+.mobile-menu.open{opacity:1;transform:none;pointer-events:auto}
+.mobile-menu a{font-family:var(--display);font-size:46px;letter-spacing:.03em;padding:4px 0;border-bottom:1px solid var(--line-soft)}
+.mobile-menu a:hover{color:var(--gold)}
+.mobile-menu .btn{margin-top:28px;font-family:var(--body);font-size:14px}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;min-height:100svh;display:flex;align-items:center;padding:130px 0 90px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0;
+  background:
+   radial-gradient(900px 600px at 78% 30%,rgba(212,168,67,.20),transparent 60%),
+   radial-gradient(700px 500px at 10% 90%,rgba(212,168,67,.08),transparent 60%),
+   linear-gradient(180deg,#0b0b0d 0%,#0e0d10 100%)}
+.hero-grid{position:absolute;inset:0;z-index:0;opacity:.35;
+  background-image:linear-gradient(var(--line-soft) 1px,transparent 1px),linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+  background-size:64px 64px;mask-image:radial-gradient(ellipse at 70% 40%,#000 10%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 70% 40%,#000 10%,transparent 70%)}
+.hero .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:10px;padding:8px 16px 8px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(212,168,67,.06);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-hi);margin-bottom:26px}
+.badge .star{width:22px;height:22px;border-radius:50%;background:var(--gold);display:grid;place-items:center;color:#140f02;font-size:12px}
+.hero h1{font-size:clamp(68px,11vw,152px);margin-bottom:22px}
+.hero h1 .outline{color:transparent;-webkit-text-stroke:1.5px var(--gold)}
+.hero .lead{margin-bottom:36px}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:14px}
+.hero-stats{display:flex;gap:38px;margin-top:54px;flex-wrap:wrap}
+.hero-stats b{display:block;font-family:var(--display);font-size:42px;font-weight:400;color:var(--gold);line-height:1}
+.hero-stats span{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+/* hero art: mug + mana crystal */
+.hero-art{position:relative;aspect-ratio:1;max-width:480px;justify-self:end;width:100%}
+.ring{position:absolute;inset:4%;border-radius:50%;border:1px dashed var(--line);animation:spin 60s linear infinite}
+.ring.r2{inset:16%;border-style:solid;border-color:rgba(212,168,67,.10);animation-duration:40s;animation-direction:reverse}
+.ring::after{content:"";position:absolute;top:-5px;left:50%;width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 18px var(--gold)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mug{position:absolute;inset:0;display:grid;place-items:center}
+.mug svg{width:62%;filter:drop-shadow(0 30px 60px rgba(212,168,67,.25))}
+.steam path{stroke-dasharray:60;stroke-dashoffset:60;animation:steam 3.2s ease-in-out infinite}
+.steam path:nth-child(2){animation-delay:.6s}.steam path:nth-child(3){animation-delay:1.2s}
+@keyframes steam{0%{stroke-dashoffset:60;opacity:0}30%{opacity:.9}100%{stroke-dashoffset:-60;opacity:0}}
+.floaty{position:absolute;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;font-size:13px;box-shadow:0 20px 40px -20px #000;animation:float 6s ease-in-out infinite}
+.floaty b{display:block;color:var(--gold);font-family:var(--display);font-size:22px;font-weight:400;letter-spacing:.04em;line-height:1.1}
+.floaty.f1{top:12%;left:-4%}
+.floaty.f2{bottom:14%;right:-2%;animation-delay:-3s}
+@keyframes float{50%{transform:translateY(-12px)}}
+
+/* ticker */
+.ticker{border-block:1px solid var(--line);background:#0e0e11;overflow:hidden;padding:18px 0;position:relative;z-index:2}
+.ticker-track{display:flex;gap:48px;width:max-content;animation:tick 38s linear infinite}
+.ticker span{font-family:var(--display);font-size:30px;letter-spacing:.06em;white-space:nowrap;display:flex;align-items:center;gap:48px;color:var(--muted)}
+.ticker span::after{content:"◆";color:var(--gold);font-size:16px}
+.ticker span:nth-child(odd){color:var(--text)}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ===== MENU ===== */
+.menu{background:var(--bg-2)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:40px;padding:6px;border:1px solid var(--line-soft);border-radius:999px;width:max-content;max-width:100%;background:var(--bg)}
+.tab{padding:12px 26px;border-radius:999px;font-weight:900;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);transition:all .25s}
+.tab:hover{color:var(--text)}
+.tab[aria-selected="true"]{background:var(--gold);color:#140f02}
+.panel{display:none;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+.panel.active{display:grid;animation:fade .45s ease}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}}
+.item{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;gap:10px;transition:border-color .25s,transform .25s,background .25s;position:relative;overflow:hidden}
+.item:hover{border-color:var(--line);transform:translateY(-3px);background:var(--card-2)}
+.item-top{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+.item h3{font-size:30px;letter-spacing:.03em}
+.price{font-family:var(--display);font-size:28px;color:var(--gold);white-space:nowrap}
+.item p{color:var(--muted);font-size:15px;line-height:1.55;flex:1}
+.item-foot{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.tag{font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:rgba(212,168,67,.12);color:var(--gold-hi)}
+.tag.empty{background:none;padding:0}
+.add{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;color:var(--gold);font-size:22px;line-height:1;transition:all .2s}
+.add:hover{background:var(--gold);color:#140f02;border-color:var(--gold)}
+.add.pop{animation:pop .4s ease}
+@keyframes pop{50%{transform:scale(1.25)}}
+.item.signature{border-color:var(--line);background:linear-gradient(160deg,rgba(212,168,67,.10),var(--card) 55%)}
+.item.signature::before{content:"SIGNATURE";position:absolute;top:14px;right:-34px;transform:rotate(45deg);background:var(--gold);color:#140f02;font-size:10px;font-weight:900;letter-spacing:.16em;padding:4px 40px}
+.item.signature .item-top{padding-right:36px}
+.menu-note{margin-top:30px;color:var(--muted);font-size:14px;text-align:center}
+
+/* ===== GAME NIGHTS ===== */
+.events{overflow:hidden}
+.events::before{content:"";position:absolute;inset:0;background:radial-gradient(800px 400px at 50% 0%,rgba(212,168,67,.10),transparent 70%);pointer-events:none}
+.ev-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;position:relative}
+.ev{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);padding:28px 24px;display:flex;flex-direction:column;gap:14px;transition:transform .3s,border-color .3s}
+.ev:hover{transform:translateY(-6px);border-color:var(--gold)}
+.ev-day{display:flex;align-items:center;justify-content:space-between}
+.ev-day b{font-family:var(--display);font-weight:400;font-size:20px;letter-spacing:.14em;color:var(--gold)}
+.ev-icon{width:52px;height:52px;border-radius:14px;background:rgba(212,168,67,.10);border:1px solid var(--line);display:grid;place-items:center}
+.ev-icon svg{width:28px;height:28px;stroke:var(--gold);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ev h3{font-size:34px}
+.ev p{color:var(--muted);font-size:15px;flex:1}
+.ev-meta{display:flex;gap:14px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text);border-top:1px solid var(--line-soft);padding-top:14px}
+.ev-meta span{display:flex;align-items:center;gap:6px}
+.ev-meta span::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.ev-cta{margin-top:44px;display:flex;justify-content:center}
+
+/* ===== LOYALTY / XP ===== */
+.xp{background:var(--bg-2)}
+.xp-box{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;background:linear-gradient(135deg,#17140b,var(--card) 60%);border:1px solid var(--line);border-radius:28px;padding:56px}
+.levels{display:flex;flex-direction:column;gap:14px}
+.lvl{display:grid;grid-template-columns:56px 1fr auto;gap:18px;align-items:center;padding:16px 18px;border-radius:14px;background:rgba(0,0,0,.35);border:1px solid var(--line-soft)}
+.lvl-n{width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-family:var(--display);font-size:26px;background:rgba(212,168,67,.12);color:var(--gold);border:1px solid var(--line)}
+.lvl.max .lvl-n{background:var(--gold);color:#140f02}
+.lvl b{display:block;font-family:var(--display);font-weight:400;font-size:24px;letter-spacing:.04em;line-height:1.1}
+.lvl small{color:var(--muted);font-size:13px}
+.lvl em{font-style:normal;font-size:12px;font-weight:900;letter-spacing:.12em;color:var(--gold-hi);text-transform:uppercase}
+.bar{height:10px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden;margin:26px 0 10px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold-lo),var(--gold-hi));border-radius:99px;transition:width 1.6s cubic-bezier(.2,.8,.2,1)}
+.bar-lbl{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:30px}
+
+/* ===== ABOUT ===== */
+.about .wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:70px;align-items:center}
+.about-art{position:relative;aspect-ratio:4/5;border-radius:24px;overflow:hidden;border:1px solid var(--line);background:
+  radial-gradient(circle at 50% 38%,rgba(212,168,67,.25),transparent 55%),
+  linear-gradient(180deg,#15130e,#0b0b0d)}
+.about-art svg.flag{position:absolute;inset:0;width:100%;height:100%;opacity:.16}
+.medal{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:58%}
+.about-art .cap{position:absolute;left:24px;right:24px;bottom:24px;background:rgba(11,11,13,.8);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:14px;padding:16px 18px;font-size:14px;color:var(--muted)}
+.about-art .cap b{display:block;font-family:var(--display);font-weight:400;font-size:26px;color:var(--text);letter-spacing:.04em;line-height:1.1}
+.about-copy p{color:var(--muted);margin-bottom:18px}
+.about-copy p strong{color:var(--text)}
+.values{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px}
+.val{border:1px solid var(--line-soft);border-radius:14px;padding:18px;background:var(--card)}
+.val b{display:block;font-family:var(--display);font-weight:400;font-size:24px;color:var(--gold);letter-spacing:.04em}
+.val span{font-size:13px;color:var(--muted);line-height:1.4;display:block}
+.quote{margin-top:34px;padding-left:22px;border-left:3px solid var(--gold);font-family:var(--display);font-size:clamp(26px,3vw,34px);line-height:1.1;letter-spacing:.02em}
+
+/* ===== REVIEWS ===== */
+.reviews{background:var(--bg-2)}
+.rv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.rv{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:16px}
+.stars{color:var(--gold);letter-spacing:4px;font-size:16px}
+.rv p{font-size:16px;flex:1}
+.rv cite{font-style:normal;font-size:12px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+/* ===== VISIT ===== */
+.visit-grid{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:18px}
+.vcard{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);padding:30px}
+.vcard h3{font-size:36px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.status{font-family:var(--body);font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;padding:6px 12px;border-radius:999px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 10px currentColor}
+.status.open{color:var(--ok);background:rgba(74,222,128,.1)}
+.status.closed{color:var(--bad);background:rgba(248,113,113,.1)}
+.hours{list-style:none}
+.hours li{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line-soft);font-size:15px;color:var(--muted)}
+.hours li:last-child{border:0}
+.hours li.today{color:var(--gold-hi);font-weight:700}
+.contact-list{list-style:none;display:flex;flex-direction:column;gap:18px}
+.contact-list li{display:flex;gap:14px;align-items:flex-start}
+.contact-list svg{width:22px;height:22px;flex:none;stroke:var(--gold);fill:none;stroke-width:1.8;margin-top:3px}
+.contact-list small{display:block;font-size:11px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.contact-list a:hover{color:var(--gold)}
+.map{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);min-height:340px;position:relative;background:var(--card)}
+.map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:invert(.92) hue-rotate(180deg) saturate(.35) brightness(.9) contrast(.95)}
+
+/* ===== CTA BAND ===== */
+.band{padding:90px 0;text-align:center;background:
+  radial-gradient(600px 260px at 50% 50%,rgba(212,168,67,.22),transparent 70%),var(--bg);border-top:1px solid var(--line)}
+.band h2{margin-bottom:18px}
+.band .lead{margin:0 auto 34px}
+
+/* ===== FOOTER ===== */
+footer{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:#08080a}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;margin-bottom:44px}
+.foot p{color:var(--muted);font-size:15px;margin-top:16px;max-width:340px}
+.foot h4{font-size:12px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.foot ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.foot ul a{color:var(--muted);font-size:15px}
+.foot ul a:hover{color:var(--gold)}
+.socials{display:flex;gap:10px;margin-top:20px}
+.socials a{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);display:grid;place-items:center;transition:all .2s}
+.socials a:hover{background:var(--gold);border-color:var(--gold)}
+.socials a:hover svg{stroke:#140f02}
+.socials svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:1.8}
+.legal{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-top:26px;border-top:1px solid var(--line-soft);font-size:13px;color:var(--muted)}
+.legal a{color:var(--gold)}
+
+/* ===== ORDER MODAL / CART ===== */
+.cart-fab{position:fixed;right:20px;bottom:20px;z-index:40;display:flex;align-items:center;gap:10px;padding:14px 20px 14px 18px;border-radius:999px;background:var(--gold);color:#140f02;font-weight:900;font-size:13px;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 16px 40px -10px rgba(212,168,67,.8);transform:translateY(120px);transition:transform .35s cubic-bezier(.2,.9,.3,1.3)}
+.cart-fab.show{transform:none}
+.cart-fab .count{background:#140f02;color:var(--gold);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;letter-spacing:0}
+.overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .3s}
+.overlay.open{opacity:1;pointer-events:auto}
+.modal{width:100%;max-width:520px;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto;background:var(--bg-2);border:1px solid var(--line);border-radius:24px;padding:32px;transform:translateY(20px) scale(.98);transition:transform .35s}
+.overlay.open .modal{transform:none}
+.modal-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.modal h3{font-size:46px}
+.x{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-soft);font-size:22px;color:var(--muted);display:grid;place-items:center}
+.x:hover{color:var(--gold);border-color:var(--gold)}
+.modal .sub{color:var(--muted);font-size:14px;margin-bottom:22px}
+.cart-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.cart-list li{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;padding:12px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line-soft)}
+.cart-list .nm{font-weight:700;font-size:15px}
+.cart-list .pr{font-family:var(--display);font-size:22px;color:var(--gold)}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);color:var(--gold);font-size:16px;line-height:1}
+.qty span{min-width:14px;text-align:center;font-weight:700}
+.empty-cart{text-align:center;color:var(--muted);padding:26px 10px;border:1px dashed var(--line);border-radius:14px;margin-bottom:18px;font-size:15px}
+.total{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;border-top:1px solid var(--line-soft);margin-bottom:18px}
+.total span{font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.total b{font-family:var(--display);font-weight:400;font-size:38px;color:var(--gold)}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.field input,.field select{background:var(--bg);border:1px solid var(--line-soft);border-radius:12px;padding:14px;color:var(--text);font:inherit;font-size:16px}
+.field input:focus,.field select:focus{outline:none;border-color:var(--gold)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal .btn{width:100%;margin-top:6px}
+.success{text-align:center;padding:10px 0}
+.success .check{width:84px;height:84px;margin:0 auto 18px;border-radius:50%;background:rgba(212,168,67,.12);border:1px solid var(--gold);display:grid;place-items:center}
+.success .check svg{width:40px;height:40px;stroke:var(--gold);fill:none;stroke-width:2.5}
+.success p{color:var(--muted);margin:10px 0 24px}
+.toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);background:var(--card-2);border:1px solid var(--gold);color:var(--text);padding:12px 20px;border-radius:999px;font-size:14px;font-weight:700;z-index:60;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* reveal on scroll */
+.rv-in{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
+.rv-in.seen{opacity:1;transform:none}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:1024px){
+  .ev-grid{grid-template-columns:repeat(2,1fr)}
+  .visit-grid{grid-template-columns:1fr 1fr}
+  .map{grid-column:1/-1}
+  .xp-box{grid-template-columns:1fr;gap:40px;padding:40px}
+}
+@media (max-width:860px){
+  .nav-links{display:none}
+  .burger{display:block}
+  .hero .wrap{grid-template-columns:1fr}
+  .hero-art{justify-self:center;max-width:360px;order:-1;margin-bottom:-20px}
+  .about .wrap{grid-template-columns:1fr;gap:44px}
+  .about-art{max-width:460px;aspect-ratio:1}
+  .rv-grid{grid-template-columns:1fr}
+  .foot{grid-template-columns:1fr 1fr}
+  .foot > div:first-child{grid-column:1/-1}
+}
+@media (max-width:600px){
+  body{font-size:16px}
+  section{padding:80px 0}
+  .wrap{padding:0 16px}
+  .hero{padding-top:100px}
+  .hero-art{max-width:280px}
+  .floaty{display:none}
+  .hero-stats{gap:26px}
+  .tabs{width:100%;border-radius:18px}
+  .tab{flex:1;padding:12px 8px;font-size:12px;letter-spacing:.1em}
+  .panel{grid-template-columns:1fr}
+  .ev-grid,.visit-grid{grid-template-columns:1fr}
+  .values{grid-template-columns:1fr}
+  .xp-box{padding:28px 20px;border-radius:22px}
+  .modal{padding:24px 20px}
+  .row2{grid-template-columns:1fr}
+  .foot{grid-template-columns:1fr}
+  .cart-fab{right:16px;bottom:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv-in{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a href="#top" class="logo" aria-label="Manahouse Coffee home">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4 56 32 32 60 8 32Z" fill="none" stroke="#d4a843" stroke-width="3.5"/><path d="M32 18 44 32 32 46 20 32Z" fill="#d4a843"/><path d="M32 18v28M20 32h24" stroke="#0b0b0d" stroke-width="2"/></svg>
+      <span class="logo-txt">MANA<span>HOUSE</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#events">Game Nights</a></li>
+      <li><a href="#rewards">Rewards</a></li>
+      <li><a href="#about">Our Story</a></li>
+      <li><a href="#visit">Visit</a></li>
+      <li><button class="btn btn-gold" data-open-order>Order Ahead</button></li>
+    </ul>
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+  <a href="#menu">Menu</a>
+  <a href="#events">Game Nights</a>
+  <a href="#rewards">Rewards</a>
+  <a href="#about">Our Story</a>
+  <a href="#visit">Visit Us</a>
+  <button class="btn btn-gold" data-open-order>Order Ahead</button>
+</nav>
+
+<main id="top">
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="wrap">
+    <div>
+      <div class="badge"><span class="star">★</span> Veteran-Owned · Jacksboro, TN</div>
+      <h1>Refill<br>Your <span class="gold">Mana</span><span class="outline">.</span></h1>
+      <p class="lead">Handcrafted espresso, slow-steeped cold brew, and a lounge built for game nights. Grab a table, roll some dice, and stay awhile.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-gold" data-open-order>Order Ahead
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+        <a href="#menu" class="btn btn-ghost">See the Menu</a>
+      </div>
+      <div class="hero-stats">
+        <div><b>100%</b><span>Veteran-owned</span></div>
+        <div><b>Weekly</b><span>Game nights</span></div>
+        <div><b>Local</b><span>Campbell County</span></div>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="ring"></div>
+      <div class="ring r2"></div>
+      <div class="mug">
+        <svg viewBox="0 0 240 260">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3cf6e"/><stop offset=".5" stop-color="#d4a843"/><stop offset="1" stop-color="#8a6a22"/></linearGradient>
+            <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f1d22"/><stop offset="1" stop-color="#101013"/></linearGradient>
+          </defs>
+          <g class="steam" fill="none" stroke="#d4a843" stroke-width="4" stroke-linecap="round" opacity=".8">
+            <path d="M85 70c-12-14 12-22 0-38"/><path d="M118 64c-12-14 12-22 0-38"/><path d="M151 70c-12-14 12-22 0-38"/>
+          </g>
+          <path d="M184 118h14a26 26 0 0 1 0 52h-18" fill="none" stroke="url(#g1)" stroke-width="12"/>
+          <path d="M44 96h150l-12 124a22 22 0 0 1-22 20H78a22 22 0 0 1-22-20Z" fill="url(#g2)" stroke="url(#g1)" stroke-width="4"/>
+          <ellipse cx="119" cy="96" rx="75" ry="10" fill="#2a1a0c" stroke="url(#g1)" stroke-width="4"/>
+          <path d="M119 128 145 163 119 198 93 163Z" fill="none" stroke="url(#g1)" stroke-width="4"/>
+          <path d="M119 146 132 163 119 180 106 163Z" fill="url(#g1)"/>
+        </svg>
+      </div>
+      <div class="floaty f1"><b>+50 XP</b>Every drink earns rewards</div>
+      <div class="floaty f2"><b>Fri 6PM</b>Board Game Night</div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>Espresso</span><span>Cold Brew</span><span>Board Games</span><span>Loose-Leaf Tea</span><span>Card Tournaments</span><span>Breakfast All Day</span><span>Veteran-Owned</span><span>Jacksboro, TN</span>
+    <span>Espresso</span><span>Cold Brew</span><span>Board Games</span><span>Loose-Leaf Tea</span><span>Card Tournaments</span><span>Breakfast All Day</span><span>Veteran-Owned</span><span>Jacksboro, TN</span>
+  </div>
+</div>
+
+<!-- ===== MENU ===== -->
+<section class="menu" id="menu">
+  <div class="wrap">
+    <div class="sec-head rv-in">
+      <span class="eyebrow">The Menu</span>
+      <h2>Choose Your <span class="gold">Loadout</span></h2>
+      <p class="lead">Every drink made to order. Tap <b style="color:var(--gold)">+</b> to add it to your order and skip the line.</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Menu categories">
+      <button class="tab" role="tab" aria-selected="true" aria-controls="p-hot" id="t-hot">Hot</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p-cold" id="t-cold" tabindex="-1">Cold</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p-tea" id="t-tea" tabindex="-1">Tea</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p-food" id="t-food" tabindex="-1">Food</button>
+    </div>
+    <div id="menuPanels"></div>
+    <p class="menu-note">Oat, almond &amp; whole milk available · Extra shot +$0.75 · Sugar-free syrups on request</p>
+  </div>
+</section>
+
+<!-- ===== GAME NIGHTS ===== -->
+<section class="events" id="events">
+  <div class="wrap">
+    <div class="sec-head center rv-in">
+      <span class="eyebrow">Game Nights</span>
+      <h2>Every Week Is <span class="gold">Co-op</span></h2>
+      <p class="lead">A shelf full of games, big tables, and good coffee. Bring your crew or come solo. There's always a seat at the table.</p>
+    </div>
+    <div class="ev-grid">
+      <article class="ev rv-in">
+        <div class="ev-day"><b>Tuesday</b><div class="ev-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="12" height="17" rx="2"/><path d="M18 6h1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H9"/></svg></div></div>
+        <h3>Card Clash</h3>
+        <p>Trading card game night. Bring your deck for casual play and friendly weekly tournaments.</p>
+        <div class="ev-meta"><span>6–9 PM</span><span>All levels</span></div>
+      </article>
+      <article class="ev rv-in">
+        <div class="ev-day"><b>Thursday</b><div class="ev-icon"><svg viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7Z"/><path d="M12 2v20M3 7l18 10M21 7 3 17"/></svg></div></div>
+        <h3>Dice &amp; Dragons</h3>
+        <p>Tabletop RPG campaigns and one-shots. New adventurers welcome. We'll roll you a character.</p>
+        <div class="ev-meta"><span>6–10 PM</span><span>Ages 13+</span></div>
+      </article>
+      <article class="ev rv-in">
+        <div class="ev-day"><b>Friday</b><div class="ev-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.3"/><circle cx="16" cy="16" r="1.3"/><circle cx="12" cy="12" r="1.3"/></svg></div></div>
+        <h3>Board Game Night</h3>
+        <p>Pull anything off our game shelf. Strategy, party games, classics. Perfect for date night or the whole family.</p>
+        <div class="ev-meta"><span>6–10 PM</span><span>Family-friendly</span></div>
+      </article>
+      <article class="ev rv-in">
+        <div class="ev-day"><b>Saturday</b><div class="ev-icon"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="6"/><path d="M7 10v4M5 12h4"/><circle cx="16" cy="11" r="1"/><circle cx="18" cy="13" r="1"/></svg></div></div>
+        <h3>Console Clash</h3>
+        <p>Retro and modern console tournaments on the big screen. Bragging rights and a free drink for the champ.</p>
+        <div class="ev-meta"><span>2–6 PM</span><span>Prizes</span></div>
+      </article>
+    </div>
+    <div class="ev-cta rv-in"><a href="#visit" class="btn btn-ghost">Reserve a Table</a></div>
+  </div>
+</section>
+
+<!-- ===== REWARDS ===== -->
+<section class="xp" id="rewards">
+  <div class="wrap">
+    <div class="xp-box rv-in">
+      <div>
+        <span class="eyebrow">Mana Rewards</span>
+        <h2 style="margin:14px 0 18px">Level Up <span class="gold">Every Sip</span></h2>
+        <p class="lead">Every dollar earns XP. Climb the ranks and unlock free drinks, game-night perks, and exclusive merch. Ask at the counter to start your save file.</p>
+        <div class="bar"><i id="xpBar"></i></div>
+        <div class="bar-lbl"><span>Lvl 2 · Regular</span><span>340 / 500 XP</span></div>
+        <button class="btn btn-gold" data-open-order>Start Earning</button>
+      </div>
+      <div class="levels">
+        <div class="lvl"><div class="lvl-n">1</div><div><b>Recruit</b><small>Free drink on your birthday</small></div><em>0 XP</em></div>
+        <div class="lvl"><div class="lvl-n">2</div><div><b>Regular</b><small>Free size upgrade, every visit</small></div><em>250 XP</em></div>
+        <div class="lvl"><div class="lvl-n">3</div><div><b>Veteran</b><small>Every 10th drink free</small></div><em>750 XP</em></div>
+        <div class="lvl max"><div class="lvl-n">★</div><div><b>Legend</b><small>Reserved game-night seat + merch drop</small></div><em>1500 XP</em></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="about-art rv-in" aria-hidden="true">
+      <svg class="flag" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+        <g fill="#d4a843">
+          <rect y="0" width="400" height="30"/><rect y="60" width="400" height="30"/><rect y="120" width="400" height="30"/><rect y="180" width="400" height="30"/><rect y="240" width="400" height="30"/><rect y="300" width="400" height="30"/><rect y="360" width="400" height="30"/><rect y="420" width="400" height="30"/><rect y="480" width="400" height="30"/>
+        </g>
+      </svg>
+      <svg class="medal" viewBox="0 0 200 240">
+        <defs><linearGradient id="m1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3cf6e"/><stop offset=".55" stop-color="#d4a843"/><stop offset="1" stop-color="#7c5d1a"/></linearGradient></defs>
+        <path d="M60 0h80l-20 70H80Z" fill="#1d1d24" stroke="url(#m1)" stroke-width="3"/>
+        <path d="M86 0h28l-8 70H94Z" fill="url(#m1)"/>
+        <circle cx="100" cy="150" r="72" fill="#121216" stroke="url(#m1)" stroke-width="5"/>
+        <circle cx="100" cy="150" r="58" fill="none" stroke="url(#m1)" stroke-width="1.5" stroke-dasharray="3 5"/>
+        <path d="M100 104l12.9 26.2 28.9 4.2-20.9 20.4 4.9 28.8L100 170l-25.8 13.6 4.9-28.8-20.9-20.4 28.9-4.2Z" fill="url(#m1)"/>
+      </svg>
+      <div class="cap"><b>Served Our Country.</b>Now serving our community.</div>
+    </div>
+    <div class="about-copy rv-in">
+      <span class="eyebrow">Our Story</span>
+      <h2 style="margin:14px 0 26px">From Service <span class="gold">To Espresso</span></h2>
+      <p>Manahouse Coffee was founded by a <strong>U.S. military veteran</strong> who learned that the best missions end around a table: a hot cup of coffee in hand, trading stories with the people who had your back.</p>
+      <p>We built Manahouse to be that table for <strong>Jacksboro and Campbell County</strong>. It's a place where neighbors become regulars, strangers become game-night teammates, and every cup is made with the same care and discipline learned in uniform.</p>
+      <p>In gaming, <em>mana</em> is the energy that powers your next move. We think a great cup of coffee does the same.</p>
+      <div class="values">
+        <div class="val"><b>Discipline</b><span>Every drink dialed in, every time.</span></div>
+        <div class="val"><b>Community</b><span>A seat at the table for everyone.</span></div>
+        <div class="val"><b>Service</b><span>Veterans &amp; first responders get 10% off.</span></div>
+      </div>
+      <p class="quote">"No one gets left behind, <span class="gold">especially not before coffee.</span>"</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== REVIEWS ===== -->
+<section class="reviews">
+  <div class="wrap">
+    <div class="sec-head center rv-in">
+      <span class="eyebrow">Player Reviews</span>
+      <h2>What The <span class="gold">Party</span> Says</h2>
+    </div>
+    <div class="rv-grid">
+      <figure class="rv rv-in"><div class="stars">★★★★★</div><p>"Best latte in Campbell County, and I didn't expect to lose three hours playing board games with people I just met. Coming back Friday."</p><cite>Sample review · Replace with Google review</cite></figure>
+      <figure class="rv rv-in"><div class="stars">★★★★★</div><p>"Finally a place in Jacksboro where my kids and I can hang out together. The staff taught us two new games and the cold brew is incredible."</p><cite>Sample review · Replace with Google review</cite></figure>
+      <figure class="rv rv-in"><div class="stars">★★★★★</div><p>"Love supporting a veteran-owned business. You can tell they take pride in every cup. The whole place just feels welcoming."</p><cite>Sample review · Replace with Google review</cite></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ===== VISIT ===== -->
+<section id="visit">
+  <div class="wrap">
+    <div class="sec-head rv-in">
+      <span class="eyebrow">Hours &amp; Location</span>
+      <h2>Your Next <span class="gold">Checkpoint</span></h2>
+    </div>
+    <div class="visit-grid">
+      <div class="vcard rv-in">
+        <h3>Hours <span class="status" id="status">—</span></h3>
+        <ul class="hours" id="hours"></ul>
+      </div>
+      <div class="vcard rv-in">
+        <h3>Find Us</h3>
+        <ul class="contact-list">
+          <li><svg viewBox="0 0 24 24"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            <div><small>Address</small><a href="https://www.google.com/maps/search/?api=1&query=Manahouse+Coffee+Jacksboro+TN" target="_blank" rel="noopener">Jacksboro, TN 37757<br>Get directions →</a></div></li>
+          <li><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg>
+            <div><small>Phone</small><a href="tel:+10000000000">(423) 000-0000</a></div></li>
+          <li><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5"/></svg>
+            <div><small>Social</small><a href="#">@manahousecoffee</a></div></li>
+        </ul>
+      </div>
+      <div class="map rv-in">
+        <iframe title="Map to Manahouse Coffee" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Manahouse%20Coffee%20Jacksboro%20TN&z=14&output=embed"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA BAND ===== -->
+<section class="band">
+  <div class="wrap rv-in">
+    <span class="eyebrow">Press Start</span>
+    <h2 style="margin-top:14px">Your Table <span class="gold">Is Waiting</span></h2>
+    <p class="lead">Order ahead and it'll be hot and ready when you walk in.</p>
+    <button class="btn btn-gold" data-open-order>Order Ahead</button>
+  </div>
+</section>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a href="#top" class="logo" aria-label="Manahouse Coffee home">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4 56 32 32 60 8 32Z" fill="none" stroke="#d4a843" stroke-width="3.5"/><path d="M32 18 44 32 32 46 20 32Z" fill="#d4a843"/></svg>
+          <span class="logo-txt">MANA<span>HOUSE</span></span>
+        </a>
+        <p>Veteran-owned coffee &amp; gaming lounge proudly serving Jacksboro and Campbell County, Tennessee.</p>
+        <div class="socials">
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3Z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M9 12a4 4 0 1 0 4 4V2c1 3 3 5 6 5"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul><li><a href="#menu">Menu</a></li><li><a href="#events">Game Nights</a></li><li><a href="#rewards">Mana Rewards</a></li><li><a href="#about">Our Story</a></li></ul>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <ul><li><a href="#visit">Hours</a></li><li><a href="https://www.google.com/maps/search/?api=1&query=Manahouse+Coffee+Jacksboro+TN" target="_blank" rel="noopener">Directions</a></li><li><a href="#" data-open-order>Order Ahead</a></li></ul>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© <span id="yr"></span> Manahouse Coffee · Jacksboro, TN</span>
+      <span>Website by <a href="#">Beacon865</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- cart button -->
+<button class="cart-fab" id="cartFab" data-open-order aria-label="View order"><span class="count" id="cartCount">0</span> View Order</button>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ===== ORDER MODAL ===== -->
+<div class="overlay" id="overlay" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div id="orderView">
+      <div class="modal-head">
+        <h3 id="modalTitle">Your <span class="gold">Order</span></h3>
+        <button class="x" data-close aria-label="Close">×</button>
+      </div>
+      <p class="sub">Pickup at the counter. Pay when you arrive.</p>
+      <ul class="cart-list" id="cartList"></ul>
+      <div class="empty-cart" id="emptyCart">Your inventory is empty.<br><a href="#menu" data-close style="color:var(--gold);font-weight:700">Browse the menu →</a></div>
+      <div class="total"><span>Total</span><b id="cartTotal">$0.00</b></div>
+      <form id="orderForm" novalidate>
+        <div class="row2">
+          <div class="field"><label for="oName">Name</label><input id="oName" required autocomplete="given-name" placeholder="Player one"></div>
+          <div class="field"><label for="oPhone">Phone</label><input id="oPhone" type="tel" required autocomplete="tel" placeholder="(423) 555-0123"></div>
+        </div>
+        <div class="field"><label for="oTime">Pickup time</label>
+          <select id="oTime"><option>ASAP (~10 min)</option><option>In 20 minutes</option><option>In 30 minutes</option><option>In 45 minutes</option></select>
+        </div>
+        <button class="btn btn-gold" type="submit">Place Order</button>
+      </form>
+    </div>
+    <div id="successView" class="success" hidden>
+      <div class="check"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></div>
+      <h3>Quest <span class="gold">Accepted</span></h3>
+      <p id="successMsg"></p>
+      <button class="btn btn-gold" data-close>Back to the Lounge</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ---------- DATA (edit prices & hours here) ----------
+  const MENU = {
+    hot: [
+      {n:"Mana Potion Latte", p:5.75, d:"Our signature. Double espresso, house honey-lavender, steamed milk, gold shimmer.", t:"Signature", sig:true},
+      {n:"Drip of the Day", p:2.75, d:"Fresh-brewed single origin. Free refills while you play.", t:"Refills"},
+      {n:"Americano", p:3.50, d:"Two shots of espresso over hot water. Bold and clean.", t:""},
+      {n:"Salted Caramel Latte", p:5.25, d:"Espresso, house caramel, sea salt, steamed milk.", t:"Fan Fav"},
+      {n:"Cappuccino", p:4.25, d:"Equal parts espresso, steamed milk and velvet foam.", t:""},
+      {n:"Mocha Mission", p:5.25, d:"Espresso, dark chocolate, steamed milk, whipped cream.", t:""}
+    ],
+    cold: [
+      {n:"Elixir Cold Brew", p:4.75, d:"Steeped 20 hours. Smooth, low-acid, dangerously strong.", t:"Signature", sig:true},
+      {n:"Iced Vanilla Latte", p:5.00, d:"Espresso, Madagascar vanilla, milk over ice.", t:""},
+      {n:"Critical Hit Frappe", p:5.75, d:"Blended caramel, espresso, cookie crumble, whip.", t:"Fan Fav"},
+      {n:"Sweet Cream Nitro", p:5.50, d:"Nitro cold brew topped with house vanilla sweet cream.", t:""},
+      {n:"Iced Mocha", p:5.25, d:"Espresso, dark chocolate and milk over ice.", t:""},
+      {n:"Energy Refresher", p:4.75, d:"Berry or mango, lightly caffeinated, shaken with ice.", t:"No Coffee"}
+    ],
+    tea: [
+      {n:"Healing Chai", p:4.75, d:"Spiced black tea, steamed milk, cinnamon dust.", t:"Signature", sig:true},
+      {n:"Matcha Latte", p:5.25, d:"Ceremonial-grade matcha whisked with your choice of milk.", t:""},
+      {n:"London Fog", p:4.50, d:"Earl Grey, vanilla, steamed milk.", t:""},
+      {n:"Southern Sweet Tea", p:2.75, d:"It's Tennessee. Brewed fresh daily.", t:"Local"},
+      {n:"Loose-Leaf Pot", p:3.75, d:"Rotating selection of green, black and herbal teas.", t:""},
+      {n:"Hot Cocoa", p:3.50, d:"Rich chocolate, steamed milk, marshmallows. Kid-approved.", t:"Kids"}
+    ],
+    food: [
+      {n:"The Rations Biscuit", p:6.50, d:"Buttermilk biscuit, sausage, egg, cheddar. Built for long campaigns.", t:"Signature", sig:true},
+      {n:"Avocado Toast", p:7.50, d:"Sourdough, smashed avocado, chili flake, everything seasoning.", t:""},
+      {n:"Loaded Bagel", p:4.50, d:"Toasted bagel with cream cheese or butter and jam.", t:""},
+      {n:"Blueberry Muffin", p:3.50, d:"Baked fresh every morning.", t:""},
+      {n:"Party Platter", p:14.00, d:"Shareable snacks for your game table: pretzels, cheese, fruit, cookies.", t:"Share"},
+      {n:"Cookie Loot Drop", p:2.75, d:"Chocolate chunk, sugar or peanut butter. Warm on request.", t:""}
+    ]
+  };
+  // 0=Sun … 6=Sat ; [openHour, closeHour] 24h, null = closed
+  const HOURS = [[8,16],[7,18],[7,21],[7,18],[7,21],[7,22],[8,22]];
+  const DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const money = n => "$" + n.toFixed(2);
+  const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+  // ---------- NAV ----------
+  const nav = $("#nav"), burger = $("#burger"), mm = $("#mobileMenu");
+  const onScroll = () => nav.classList.toggle("scrolled", scrollY > 30);
+  addEventListener("scroll", onScroll, {passive:true}); onScroll();
+  const setMenu = open => {
+    burger.setAttribute("aria-expanded", open);
+    burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    mm.classList.toggle("open", open);
+    document.body.style.overflow = open ? "hidden" : "";
+  };
+  burger.addEventListener("click", () => setMenu(burger.getAttribute("aria-expanded") !== "true"));
+  mm.querySelectorAll("a,button").forEach(a => a.addEventListener("click", () => setMenu(false)));
+
+  // ---------- MENU ----------
+  const panels = $("#menuPanels");
+  Object.entries(MENU).forEach(([key, items], i) => {
+    const div = document.createElement("div");
+    div.className = "panel" + (i === 0 ? " active" : "");
+    div.id = "p-" + key; div.setAttribute("role","tabpanel"); div.setAttribute("aria-labelledby","t-" + key);
+    div.innerHTML = items.map((it, j) => `
+      <article class="item${it.sig ? " signature" : ""}">
+        <div class="item-top"><h3>${esc(it.n)}</h3><span class="price">${money(it.p)}</span></div>
+        <p>${esc(it.d)}</p>
+        <div class="item-foot"><span class="tag${it.t ? "" : " empty"}">${esc(it.t)}</span>
+          <button class="add" data-add="${key}:${j}" aria-label="Add ${esc(it.n)} to order">+</button></div>
+      </article>`).join("");
+    panels.appendChild(div);
+  });
+  const tabs = $$(".tab");
+  const selectTab = t => {
+    tabs.forEach(x => { const on = x === t; x.setAttribute("aria-selected", on); x.tabIndex = on ? 0 : -1; });
+    $$(".panel").forEach(p => p.classList.toggle("active", p.id === t.getAttribute("aria-controls")));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => selectTab(t));
+    t.addEventListener("keydown", e => {
+      const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (d) { const n = tabs[(i + d + tabs.length) % tabs.length]; n.focus(); selectTab(n); }
+    });
+  });
+
+  // ---------- CART ----------
+  const cart = new Map();
+  const toast = $("#toast"); let toastT;
+  const showToast = msg => { toast.textContent = msg; toast.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove("show"), 1800); };
+  const renderCart = () => {
+    let count = 0, total = 0;
+    $("#cartList").innerHTML = [...cart].map(([id, q]) => {
+      const [k, j] = id.split(":"), it = MENU[k][j];
+      count += q; total += q * it.p;
+      return `<li><span class="nm">${esc(it.n)}</span>
+        <span class="qty"><button data-dec="${id}" aria-label="Remove one">−</button><span>${q}</span><button data-inc="${id}" aria-label="Add one">+</button></span>
+        <span class="pr">${money(q * it.p)}</span></li>`;
+    }).join("");
+    $("#cartCount").textContent = count;
+    $("#cartTotal").textContent = money(total);
+    $("#emptyCart").hidden = count > 0;
+    $("#orderForm").hidden = count === 0;
+    $("#cartFab").classList.toggle("show", count > 0);
+    return {count, total};
+  };
+  document.addEventListener("click", e => {
+    const add = e.target.closest("[data-add]"), inc = e.target.closest("[data-inc]"), dec = e.target.closest("[data-dec]");
+    if (add) {
+      const id = add.dataset.add; cart.set(id, (cart.get(id) || 0) + 1); renderCart();
+      add.classList.remove("pop"); void add.offsetWidth; add.classList.add("pop");
+      const [k, j] = id.split(":"); showToast("+ " + MENU[k][j].n + " added");
+    }
+    if (inc) { cart.set(inc.dataset.inc, cart.get(inc.dataset.inc) + 1); renderCart(); }
+    if (dec) { const q = cart.get(dec.dataset.dec) - 1; q > 0 ? cart.set(dec.dataset.dec, q) : cart.delete(dec.dataset.dec); renderCart(); }
+  });
+
+  // ---------- MODAL ----------
+  const overlay = $("#overlay"); let lastFocus;
+  const openModal = () => {
+    lastFocus = document.activeElement;
+    $("#orderView").hidden = false; $("#successView").hidden = true;
+    renderCart();
+    overlay.classList.add("open"); overlay.setAttribute("aria-hidden","false");
+    document.body.style.overflow = "hidden";
+    setTimeout(() => overlay.querySelector(".x").focus(), 50);
+  };
+  const closeModal = () => {
+    overlay.classList.remove("open"); overlay.setAttribute("aria-hidden","true");
+    document.body.style.overflow = "";
+    lastFocus && lastFocus.focus && lastFocus.focus();
+  };
+  $$("[data-open-order]").forEach(b => b.addEventListener("click", e => { e.preventDefault(); openModal(); }));
+  overlay.addEventListener("click", e => { if (e.target === overlay || e.target.closest("[data-close]")) closeModal(); });
+  addEventListener("keydown", e => {
+    if (e.key === "Escape") { if (overlay.classList.contains("open")) closeModal(); else setMenu(false); }
+    if (e.key === "Tab" && overlay.classList.contains("open")) {
+      const f = [...overlay.querySelectorAll("button,input,select,a[href]")].filter(el => !el.closest("[hidden]") && el.offsetParent);
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length-1].focus(); }
+      else if (!e.shiftKey && document.activeElement === f[f.length-1]) { e.preventDefault(); f[0].focus(); }
+    }
+  });
+  $("#orderForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const name = $("#oName"), phone = $("#oPhone");
+    let ok = true;
+    [name, phone].forEach(f => { const bad = !f.value.trim(); f.style.borderColor = bad ? "var(--bad)" : ""; if (bad) ok = false; });
+    if (!ok) { showToast("Add your name and phone"); return; }
+    const {count, total} = renderCart();
+    $("#successMsg").textContent = `Thanks, ${name.value.trim()}! Your ${count} item${count > 1 ? "s" : ""} (${money(total)}) will be ready ${$("#oTime").value.toLowerCase().replace("asap (~10 min)","in about 10 minutes")}. Pay at the counter.`;
+    $("#orderView").hidden = true; $("#successView").hidden = false;
+    cart.clear(); renderCart(); e.target.reset();
+    $("#successView .btn").focus();
+  });
+
+  // ---------- HOURS + OPEN NOW ----------
+  const fmt = h => { const s = h >= 12 ? "PM" : "AM"; const x = h % 12 || 12; return x + " " + s; };
+  const now = new Date(), today = now.getDay(), hr = now.getHours() + now.getMinutes() / 60;
+  const order = [1,2,3,4,5,6,0];
+  $("#hours").innerHTML = order.map(d => `<li class="${d === today ? "today" : ""}"><span>${DAYS[d]}</span><span>${HOURS[d] ? fmt(HOURS[d][0]) + " – " + fmt(HOURS[d][1]) : "Closed"}</span></li>`).join("");
+  const h = HOURS[today], open = h && hr >= h[0] && hr < h[1];
+  const st = $("#status"); st.textContent = open ? "Open Now" : "Closed"; st.className = "status " + (open ? "open" : "closed");
+
+  // ---------- REVEAL + XP BAR ----------
+  const io = new IntersectionObserver(es => es.forEach(en => {
+    if (en.isIntersecting) { en.target.classList.add("seen"); io.unobserve(en.target); }
+  }), {threshold:.12});
+  $$(".rv-in").forEach(el => io.observe(el));
+  const xo = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { $("#xpBar").style.width = "68%"; xo.disconnect(); } }), {threshold:.4});
+  xo.observe($("#xpBar"));
+
+  $("#yr").textContent = now.getFullYear();
+  renderCart();
+})();
+</script>
+</body>
+</html>

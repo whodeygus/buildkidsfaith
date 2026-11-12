@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>The Little Lantern</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none;
+    -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;font-family:"Courier New",monospace}
+  #game{display:block;margin:0 auto;image-rendering:pixelated;image-rendering:crisp-edges;background:#000}
+  #controls{display:none}
+  body.touch #controls{display:block}
+  #dpad{position:fixed;left:18px;bottom:22px;width:150px;height:150px;border-radius:50%;
+    background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.25);touch-action:none}
+  #dpad .arr{position:absolute;width:46px;height:46px;border-radius:10px;background:rgba(255,255,255,.18);
+    color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;pointer-events:none}
+  #dpad .arr.on{background:rgba(255,216,74,.6)}
+  #dpad .up{left:52px;top:4px} #dpad .down{left:52px;bottom:4px} #dpad .left{left:4px;top:52px} #dpad .right{right:4px;top:52px}
+  .btn{position:fixed;width:74px;height:74px;border-radius:50%;border:3px solid rgba(255,255,255,.4);
+    color:#fff;font:bold 26px "Courier New",monospace;display:flex;align-items:center;justify-content:center;touch-action:none}
+  #btnA{right:18px;bottom:70px;background:rgba(255,154,46,.55)}
+  #btnB{right:104px;bottom:22px;background:rgba(120,140,200,.45)}
+  .btn.on{filter:brightness(1.6);transform:scale(.94)}
+  #mute{position:fixed;top:8px;right:8px;width:38px;height:38px;border-radius:50%;border:2px solid rgba(255,255,255,.35);
+    background:rgba(0,0,0,.4);color:#fff;font-size:18px;z-index:5;cursor:pointer}
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<div id="controls">
+  <div id="dpad">
+    <div class="arr up">▲</div><div class="arr down">▼</div><div class="arr left">◀</div><div class="arr right">▶</div>
+  </div>
+  <div class="btn" id="btnB">B</div>
+  <div class="btn" id="btnA">A</div>
+</div>
+<button id="mute" aria-label="Sound on or off">♪</button>
+<script>
+'use strict';
+// =====================================================================
+//  THE LITTLE LANTERN — a Build Kids Faith adventure
+//  Win by being kind: ACT kindly until a creature's friendship meter
+//  fills up, then choose MERCY to make a friend.
+// =====================================================================
+const W=320,H=240,T=16,MW=60,MH=15;
+const cv=document.getElementById('game');
+const ctx=cv.getContext('2d');
+cv.width=W*2; cv.height=H*2;
+ctx.imageSmoothingEnabled=false;
+
+const isTouch=(window.matchMedia&&matchMedia('(pointer:coarse)').matches)||('ontouchstart' in window);
+if(isTouch) document.body.classList.add('touch');
+function resize(){
+  let w;
+  if(isTouch && innerWidth<innerHeight){ w=Math.min(innerWidth,(innerHeight-200)*4/3); }
+  else if(isTouch){ w=Math.min(innerWidth-300,innerHeight*4/3); if(w<240) w=Math.min(innerWidth,innerHeight*4/3); }
+  else { w=Math.min(innerWidth,innerHeight*4/3); }
+  cv.style.width=Math.floor(w)+'px'; cv.style.height=Math.floor(w*3/4)+'px';
+  const h=w*3/4;
+  if(!isTouch)cv.style.marginTop=Math.max(0,(innerHeight-h)/2)+'px';
+  else if(innerWidth<innerHeight)cv.style.marginTop=Math.max(0,(innerHeight-200-h)/2)+'px';
+  else cv.style.marginTop=Math.max(0,(innerHeight-h)/2)+'px';
+}
+addEventListener('resize',resize); resize();
+
+// ------------------------------------------------------------ input
+const DIRS=['up','down','left','right'];
+const keyHeld={up:false,down:false,left:false,right:false};
+const padHeld={up:false,down:false,left:false,right:false};
+const held={up:false,down:false,left:false,right:false};
+let prevHeld={...held};
+const dirTap={up:false,down:false,left:false,right:false};
+let aPressed=false,bPressed=false,tapPt=null;
+const keyMap={ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right'};
+addEventListener('keydown',e=>{
+  unlockAudio();
+  if(keyMap[e.code]){keyHeld[keyMap[e.code]]=true;dirTap[keyMap[e.code]]=true;e.preventDefault();}
+  if(!e.repeat){
+    if(['KeyZ','Enter','Space','KeyJ'].includes(e.code)){aPressed=true;e.preventDefault();}
+    if(['KeyX','ShiftLeft','ShiftRight','Escape','Backspace','KeyK'].includes(e.code)){bPressed=true;e.preventDefault();}
+  }
+});
+addEventListener('keyup',e=>{ if(keyMap[e.code]) keyHeld[keyMap[e.code]]=false; });
+addEventListener('blur',()=>{DIRS.forEach(d=>{keyHeld[d]=false;padHeld[d]=false;});});
+
+const dpad=document.getElementById('dpad');
+const arrEls={}; DIRS.forEach(d=>arrEls[d]=dpad.querySelector('.'+d));
+let padPid=null;
+function padVisual(){DIRS.forEach(d=>arrEls[d].classList.toggle('on',padHeld[d]));}
+function padFrom(e){
+  const r=dpad.getBoundingClientRect();
+  const dx=e.clientX-(r.left+r.width/2), dy=e.clientY-(r.top+r.height/2);
+  DIRS.forEach(d=>padHeld[d]=false);
+  if(Math.hypot(dx,dy)>=14){
+    const s=((Math.round(Math.atan2(dy,dx)/(Math.PI/4))%8)+8)%8; // 0=right,2=down,4=left,6=up
+    if(s===7||s===0||s===1) padHeld.right=true;
+    if(s===1||s===2||s===3) padHeld.down=true;
+    if(s===3||s===4||s===5) padHeld.left=true;
+    if(s===5||s===6||s===7) padHeld.up=true;
+  }
+  padVisual();
+}
+dpad.addEventListener('pointerdown',e=>{e.preventDefault();unlockAudio();padPid=e.pointerId;try{dpad.setPointerCapture(e.pointerId);}catch(_){}padFrom(e);});
+dpad.addEventListener('pointermove',e=>{if(e.pointerId===padPid)padFrom(e);});
+['pointerup','pointercancel','lostpointercapture'].forEach(t=>dpad.addEventListener(t,e=>{
+  if(e.pointerId===padPid){padPid=null;DIRS.forEach(d=>padHeld[d]=false);padVisual();}
+}));
+function bindBtn(id,fn){
+  const el=document.getElementById(id);
+  el.addEventListener('pointerdown',e=>{e.preventDefault();unlockAudio();fn();el.classList.add('on');});
+  ['pointerup','pointercancel','pointerleave'].forEach(t=>el.addEventListener(t,()=>el.classList.remove('on')));
+}
+bindBtn('btnA',()=>aPressed=true);
+bindBtn('btnB',()=>bPressed=true);
+cv.addEventListener('pointerdown',e=>{
+  e.preventDefault(); unlockAudio();
+  const r=cv.getBoundingClientRect();
+  tapPt={x:(e.clientX-r.left)/r.width*W, y:(e.clientY-r.top)/r.height*H};
+  aPressed=true;
+});
+document.addEventListener('contextmenu',e=>e.preventDefault());
+function tapped(d){return dirTap[d]||(held[d]&&!prevHeld[d]);}
+function takeA(){if(aPressed){aPressed=false;return true;}return false;}
+function takeB(){if(bPressed){bPressed=false;return true;}return false;}
+function hit(r,p){return p&&p.x>=r.x&&p.x<=r.x+r.w&&p.y>=r.y&&p.y<=r.y+r.h;}
+
+// ------------------------------------------------------------ audio
+let AC=null,master=null,muted=false;
+function unlockAudio(){
+  if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();master=AC.createGain();master.gain.value=0.22;master.connect(AC.destination);}catch(e){AC=null;}}
+  if(AC&&AC.state==='suspended'){try{AC.resume();}catch(e){}}
+}
+function toneAt(freq,dur,type,vol,t){
+  if(!AC||muted)return;
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.type=type;o.frequency.setValueAtTime(freq,t);
+  g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(0.0008,t+dur);
+  o.connect(g);g.connect(master);o.start(t);o.stop(t+dur+0.03);
+}
+function tone(f,d,type='square',v=0.25,delay=0){if(AC)toneAt(f,d,type,v,AC.currentTime+delay);}
+const sfx={
+  blip(){tone(620,0.035,'square',0.07);},
+  move(){tone(520,0.04,'square',0.12);},
+  select(){tone(660,0.06,'square',0.16);tone(990,0.08,'square',0.16,0.06);},
+  hurt(){tone(180,0.22,'sawtooth',0.28);tone(120,0.2,'square',0.15,0.05);},
+  heal(){[523,659,784,1046].forEach((f,i)=>tone(f,0.14,'triangle',0.3,i*0.07));},
+  heart(){[784,988].forEach((f,i)=>tone(f,0.12,'triangle',0.3,i*0.08));},
+  spare(){[523,659,784,1046,1318].forEach((f,i)=>tone(f,0.2,'triangle',0.3,i*0.09));},
+  save(){[1046,1318,1568].forEach((f,i)=>tone(f,0.3,'sine',0.25,i*0.12));},
+  item(){[659,784,1046,784,1046,1318].forEach((f,i)=>tone(f,0.12,'square',0.15,i*0.08));}
+};
+const NOTE=n=>440*Math.pow(2,(n-69)/12);
+// All tunes below are original little melodies.
+const SONGS={
+  village:{len:0.22,wave:'square',
+    mel:[72,0,76,0,79,0,76,74, 72,0,74,76,74,0,0,0, 69,0,72,0,76,0,74,72, 71,0,72,74,72,0,0,0,
+         72,0,76,0,79,0,81,79, 77,0,76,74,76,0,0,0, 74,0,77,0,76,0,74,71, 72,0,0,0,0,0,0,0],
+    bass:[48,0,0,0,55,0,0,0, 53,0,0,0,55,0,0,0, 45,0,0,0,52,0,0,0, 53,0,0,0,55,0,0,0]},
+  woods:{len:0.27,wave:'triangle',
+    mel:[69,0,0,72,71,0,69,0, 67,0,0,69,64,0,0,0, 65,0,0,69,67,0,65,64, 62,0,64,0,0,0,0,0],
+    bass:[45,0,0,0,0,0,0,0, 43,0,0,0,0,0,0,0, 41,0,0,0,0,0,0,0, 40,0,0,0,0,0,0,0]},
+  battle:{len:0.13,wave:'square',
+    mel:[76,79,83,79,76,79,83,79, 74,77,81,77,74,77,81,77, 72,76,79,76,72,76,79,76, 71,74,79,74,71,74,77,74],
+    bass:[52,0,52,0,52,0,52,0, 50,0,50,0,50,0,50,0, 48,0,48,0,48,0,48,0, 43,0,43,0,43,0,43,0]},
+  end:{len:0.2,wave:'square',
+    mel:[72,76,79,84,0,79,84,0, 77,81,84,89,0,84,89,0, 79,83,86,91,0,86,91,0, 84,0,79,0,84,0,0,0],
+    bass:[48,0,0,0,48,0,0,0, 53,0,0,0,53,0,0,0, 55,0,0,0,55,0,0,0, 48,0,0,0,48,0,0,0]}
+};
+let song=null,songStep=0,nextNote=0;
+function playSong(name){
+  const s=SONGS[name]; if(song===s)return;
+  song=s;songStep=0; if(AC)nextNote=AC.currentTime+0.08;
+}
+function musicTick(){
+  if(!AC||!song||muted)return;
+  if(nextNote<AC.currentTime)nextNote=AC.currentTime+0.05;
+  while(nextNote<AC.currentTime+0.2){
+    const m=song.mel[songStep%song.mel.length];
+    if(m)toneAt(NOTE(m),song.len*0.85,song.wave,0.09,nextNote);
+    const b=song.bass[songStep%song.bass.length];
+    if(b)toneAt(NOTE(b),song.len*1.6,'triangle',0.16,nextNote);
+    nextNote+=song.len;songStep++;
+  }
+}
+const muteBtn=document.getElementById('mute');
+muteBtn.addEventListener('pointerdown',e=>{e.stopPropagation();e.preventDefault();unlockAudio();muted=!muted;muteBtn.textContent=muted?'×':'♪';});
+
+// ------------------------------------------------------------ sprites
+function makeSprite(rows,pal){
+  const w=Math.max(...rows.map(r=>r.length)),h=rows.length;
+  const c=document.createElement('canvas');c.width=w;c.height=h;
+  const x=c.getContext('2d');
+  rows.forEach((r,j)=>{[...r].forEach((ch,i)=>{const col=pal[ch];if(col){x.fillStyle=col;x.fillRect(i,j,1,1);}});});
+  return c;
+}
+const HEROES=[
+  {name:'Caroline',hair:'#6b3d1f',dress:'#2fa39b',dark:'#1f7a73'},
+  {name:'Charlotte',hair:'#c98a3c',dress:'#e8669a',dark:'#b8457a'}
+];
+const PLAYER_ROWS=[
+  "...hhhhhh...",
+  "..hhhhhhhh..",
+  ".hhhhhhhhhh.",
+  ".hhsssssshh.",
+  ".hhskssskhh.",
+  ".hhsssssshh.",
+  ".hhssppsshh.",
+  "..hh.ss.hh..",
+  "...dddddd...",
+  "..dddddddd..",
+  ".sdddddddds.",
+  ".sdddddddds.",
+  "..DDDDDDDD..",
+  "...ll..ll...",
+  "...ll..ll...",
+  "...oo..oo..."
+];
+const PLAYER_ROWS2=PLAYER_ROWS.slice(0,13).concat(["...ll..ll...","..ll....ll..","..oo....oo.."]);
+const heroSpr=HEROES.map(hh=>{
+  const pal={h:hh.hair,s:'#f6c9a0',k:'#1a1a2e',p:'#e8708a',d:hh.dress,D:hh.dark,l:'#f6c9a0',o:'#4a2a1a'};
+  return [makeSprite(PLAYER_ROWS,pal),makeSprite(PLAYER_ROWS2,pal)];
+});
+const owlSpr=makeSprite([
+  ".b........b.",
+  ".bb......bb.",
+  ".bbbbbbbbbb.",
+  "bbwwwbbwwwbb",
+  "bbwkwbbwkwbb",
+  "bbwwwyywwwbb",
+  ".bbbbyybbbb.",
+  ".bbccccccbb.",
+  "bbccccccccbb",
+  "bbccccccccbb",
+  ".bbccccccbb.",
+  "..bbbbbbbb..",
+  "...yy..yy..."
+],{b:'#8a5a3a',w:'#ffffff',k:'#1a1a2e',y:'#f2b640',c:'#e3c49a'});
+const lambSpr=makeSprite([
+  "...wwwww....",
+  ".wwwwwwwwkk.",
+  "wwwwwwwwkkkk",
+  "wwwwwwwwkwkk",
+  "wwwwwwwwkkkk",
+  ".wwwwwwww.k.",
+  "..k.k..k.k..",
+  "..k.k..k.k.."
+],{w:'#f4f4f4',k:'#2a2a3a'});
+const signSpr=makeSprite([
+  "bbbbbbbbbbbb",
+  "bLLLLLLLLLLb",
+  "bLkkkLkkkkLb",
+  "bLLLLLLLLLLb",
+  "bLkkkkLkkLLb",
+  "bLLLLLLLLLLb",
+  "bbbbbbbbbbbb",
+  ".....bb.....",
+  ".....bb.....",
+  ".....bb.....",
+  "....bbbb...."
+],{b:'#6b4423',L:'#d9b47a',k:'#8a6a40'});
+const WEED_BASE=[
+  ".....G....G.....",
+  "...gggggggggg...",
+  "..gGggggggggGg..",
+  ".gggggggggggggg.",
+  "Gggkggggggggkggg",
+  "ggggkkggggkkgggG",
+  "gggggggggggggggg",
+  "ggggggkkkkgggggg",
+  "Gggggkggggkggggg",
+  ".gggggggggggggG.",
+  "..gggggggggggg..",
+  "...bb..bb..bb..."
+];
+const WEED_HAPPY=WEED_BASE.slice();
+WEED_HAPPY[4]="Ggggggggggggggggg".slice(0,16);
+WEED_HAPPY[6]="gppgggggggggppgg";
+WEED_HAPPY[7]="Gggggkggggkggggg";
+WEED_HAPPY[8]="ggggggkkkkgggggg";
+const weedPal={g:'#3f9a3a',G:'#2a6a28',k:'#1a1a2e',b:'#6b4423',p:'#ff8fb0'};
+const weedSpr=[makeSprite(WEED_BASE,weedPal),makeSprite(WEED_HAPPY,weedPal)];
+const FROG_BASE=[
+  "..ggg..ggg..",
+  ".gwkwggwkwg.",
+  ".gwwwggwwwg.",
+  "gggggggggggg",
+  "gggkkkkkkggg",
+  "ggkggggggkgg",
+  "gllllllllllg",
+  ".gllllllllg.",
+  "gg.gg..gg.gg"
+];
+const FROG_HAPPY=FROG_BASE.slice();
+FROG_HAPPY[3]="gppggggggppg";
+FROG_HAPPY[4]="ggkggggggkgg";
+FROG_HAPPY[5]="gggkkkkkkggg";
+const frogPal={g:'#5cbf4a',w:'#ffffff',k:'#1a1a2e',l:'#c8e86a',p:'#ff9fb8'};
+const frogSpr=[makeSprite(FROG_BASE,frogPal),makeSprite(FROG_HAPPY,frogPal)];
+const heartSpr=makeSprite([".rr.rr.","rrrrrrr","rrrrrrr",".rrrrr.","..rrr..","...r..."],{r:'#ff3355'});
+const heartSprY=makeSprite([".rr.rr.","rrrrrrr","rrrrrrr",".rrrrr.","..rrr..","...r..."],{r:'#ffd84a'});
+const leafSpr=makeSprite([".gg..","ggggg","..gg."],{g:'#8ad06a'});
+const lanternSpr=makeSprite([".bb.","byyb","yyyy","byyb"],{b:'#7a5a2a',y:'#ffd84a'});
+
+// ------------------------------------------------------------ map
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+// tiles: 0 grass,1 path,2 tree,3 water,4 flowers,5 wall,6 roof,7 bridge,8 door,9 window,10 dark grass
+const SOLID=new Set([2,3,5,6,8,9]);
+const map=[];
+for(let y=0;y<MH;y++){map.push(new Array(MW).fill(0));}
+function setT(x,y,t){if(x>=0&&x<MW&&y>=0&&y<MH)map[y][x]=t;}
+(function buildMap(){
+  const r=rng(865);
+  for(let x=15;x<48;x++)for(let y=0;y<MH;y++)setT(x,y,10);
+  for(let x=0;x<MW;x++){setT(x,0,2);setT(x,1,2);setT(x,13,2);setT(x,14,2);}
+  for(let y=0;y<MH;y++){setT(0,y,2);setT(59,y,2);}
+  for(let x=1;x<59;x++){setT(x,7,1);setT(x,8,1);}
+  // houses
+  for(const hx of [2,9]){
+    for(let x=hx;x<hx+4;x++){setT(x,2,6);setT(x,3,6);setT(x,4,9);}
+    setT(hx+1,4,8);
+  }
+  // village flowers
+  for(let i=0;i<22;i++){const x=1+Math.floor(r()*13),y=2+Math.floor(r()*11);if(map[y][x]===0)setT(x,y,4);}
+  // woods
+  const clear=[[15,5,16,10],[21,4,24,10],[32,4,35,11],[41,4,44,10],[45,4,47,10],[27,9,28,11]];
+  const inClear=(x,y)=>clear.some(c=>x>=c[0]&&x<=c[2]&&y>=c[1]&&y<=c[3]);
+  for(let x=15;x<48;x++)for(let y=2;y<13;y++){
+    if(y===7||y===8||inClear(x,y))continue;
+    const p=(y===6||y===9)?0.14:0.55;
+    if(r()<p)setT(x,y,2);
+  }
+  // river + bridge
+  for(let x=48;x<=50;x++)for(let y=2;y<13;y++)setT(x,y,(y===7||y===8)?7:3);
+  // end meadow
+  for(let i=0;i<40;i++){const x=51+Math.floor(r()*8),y=2+Math.floor(r()*11);if(map[y][x]===0)setT(x,y,4);}
+  // keep a couple of spots clear
+  setT(5,10,0);setT(11,10,0);setT(7,5,0);setT(14,5,0);setT(14,6,0);
+})();
+const mapCv=document.createElement('canvas');mapCv.width=MW*T;mapCv.height=MH*T;
+(function renderMap(){
+  const m=mapCv.getContext('2d');const r=rng(42);
+  const R=(c,x,y,w,h)=>{m.fillStyle=c;m.fillRect(x,y,w,h);};
+  for(let ty=0;ty<MH;ty++)for(let tx=0;tx<MW;tx++){
+    const t=map[ty][tx],X=tx*T,Y=ty*T;
+    const dark=tx>=15&&tx<48;
+    const g=dark?'#4a8a40':'#5fae4e',g2=dark?'#3e7a36':'#4e9a40';
+    R(g,X,Y,T,T);
+    if(t===0||t===10||t===2||t===4){for(let i=0;i<3;i++)R(g2,X+Math.floor(r()*15),Y+Math.floor(r()*15),1,2);}
+    if(t===1){R('#d9b77a',X,Y,T,T);for(let i=0;i<3;i++)R('#c9a466',X+Math.floor(r()*15),Y+Math.floor(r()*15),2,1);}
+    if(t===4){const cols=['#ffffff','#ffd84a','#ff7aa8','#b48aff'];for(let i=0;i<3;i++){const fx=X+2+Math.floor(r()*11),fy=Y+2+Math.floor(r()*11);R(cols[Math.floor(r()*4)],fx,fy,2,2);R('#ffe9a0',fx,fy,1,1);}}
+    if(t===2){
+      R('#6b4423',X+6,Y+10,4,6);
+      const c1=dark?'#2a6a32':'#2f7a3a',c2=dark?'#358040':'#3f9a4a';
+      R(c1,X+4,Y,8,1);R(c1,X+2,Y+1,12,2);R(c1,X+1,Y+3,14,5);R(c1,X+2,Y+8,12,2);R(c1,X+4,Y+10,8,1);
+      R(c2,X+4,Y+2,4,2);R(c2,X+3,Y+4,2,2);
+    }
+    if(t===3){R('#3a7bd5',X,Y,T,T);R('#6aa8f0',X+2,Y+4,5,1);R('#6aa8f0',X+9,Y+11,5,1);}
+    if(t===7){R('#9a6a3a',X,Y,T,T);for(let i=0;i<T;i+=4)R('#7a4f2a',X+i,Y,1,T);if(ty===7)R('#5a3a1a',X,Y,T,2);if(ty===8)R('#5a3a1a',X,Y+14,T,2);}
+    if(t===6){R('#c0504a',X,Y,T,T);for(let i=2;i<T;i+=4)R('#9a3a36',X,Y+i,T,1);}
+    if(t===5||t===9||t===8){R('#efe0b8',X,Y,T,T);R('#c8b890',X,Y+14,T,2);}
+    if(t===9){R('#6a4a2a',X+4,Y+3,8,7);R('#9fd4ff',X+5,Y+4,6,5);R('#6a4a2a',X+7,Y+4,1,5);}
+    if(t===8){R('#7a4a2a',X+4,Y+2,8,14);R('#ffd84a',X+10,Y+9,1,1);}
+  }
+})();
+function tileAt(px,py){const tx=Math.floor(px/T),ty=Math.floor(py/T);if(tx<0||ty<0||tx>=MW||ty>=MH)return 2;return map[ty][tx];}
+
+// ------------------------------------------------------------ game state
+const G={state:'title',time:0,hero:0,name:'Caroline',hp:20,maxHp:20,items:[],
+  flags:{lantern:false,ended:false,spared:{weed:false,frog:false,cloud:false}},fade:0,gateCD:0,titleSel:0,heroSel:0};
+const P={x:3*T,y:7*T,dir:1,walkT:0};
+function spareCount(){const s=G.flags.spared;return (s.weed?1:0)+(s.frog?1:0)+(s.cloud?1:0);}
+function fmt(s){return s.replace(/\{name\}/g,G.name);}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+const LUNCH=()=>[{n:'Apple Slice',h:8},{n:'Apple Slice',h:8},{n:'Honey Bread',h:14},{n:"Grandma's Cookie",h:20}];
+
+// ------------------------------------------------------------ dialogue / typewriter
+class Typer{
+  constructor(){this.set('');}
+  set(t){this.full=t;this.n=0;this.done=!t.length;}
+  update(dt){
+    if(this.done)return;
+    const before=Math.floor(this.n);this.n+=dt*42;
+    const now=Math.floor(this.n);
+    if(now>before&&now%2===0&&this.full[now]&&this.full[now]!==' ')sfx.blip();
+    if(this.n>=this.full.length){this.n=this.full.length;this.done=true;}
+  }
+  skip(){this.n=this.full.length;this.done=true;}
+}
+let DLG=null;
+function say(pages,onDone){
+  pages=pages.filter(Boolean).map(fmt);
+  if(!pages.length){onDone&&onDone();return;}
+  DLG={pages,i:0,typer:new Typer(),onDone};DLG.typer.set(pages[0]);
+}
+function updateDlg(dt){
+  DLG.typer.update(dt);
+  if(takeA()||takeB()){
+    if(!DLG.typer.done)DLG.typer.skip();
+    else{DLG.i++;
+      if(DLG.i>=DLG.pages.length){const f=DLG.onDone;DLG=null;f&&f();}
+      else DLG.typer.set(DLG.pages[DLG.i]);}
+  }
+}
+
+// ------------------------------------------------------------ drawing helpers
+function R(c,x,y,w,h){ctx.fillStyle=c;ctx.fillRect(x,y,w,h);}
+function font(size){ctx.font=`bold ${size}px "Courier New",Courier,monospace`;}
+function txt(s,x,y,col='#fff',size=10,align='left'){font(size);ctx.fillStyle=col;ctx.textAlign=align;ctx.textBaseline='top';ctx.fillText(s,x,y);}
+function wrap(s,maxW,size){
+  font(size);const out=[];
+  for(const para of s.split('\n')){
+    let line='';
+    for(const w of para.split(' ')){const t=line?line+' '+w:w;if(ctx.measureText(t).width>maxW&&line){out.push(line);line=w;}else line=t;}
+    out.push(line);
+  }
+  return out;
+}
+function drawTyped(ty,x,y,maxW,size=10,lh=13,col='#fff'){
+  const lines=wrap(ty.full,maxW,size);let n=Math.floor(ty.n);
+  for(const L of lines){if(n<=0)break;txt(L.slice(0,n),x,y,col,size);n-=L.length+1;y+=lh;}
+}
+function frame(x,y,w,h,border='#fff'){R('#000',x,y,w,h);R(border,x,y,w,2);R(border,x,y+h-2,w,2);R(border,x,y,2,h);R(border,x+w-2,y,2,h);}
+function spr(s,x,y,flip=false,scale=1){
+  const w=s.width*scale,h=s.height*scale;
+  if(flip){ctx.save();ctx.translate(Math.round(x)+w,Math.round(y));ctx.scale(-1,1);ctx.drawImage(s,0,0,w,h);ctx.restore();}
+  else ctx.drawImage(s,Math.round(x),Math.round(y),w,h);
+}
+function circ(x,y,r){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();}
+function drawCloud(cx,cy,s,happy,t){
+  const col=happy?'#f4f7ff':'#7d8496',sh=happy?'#c9d4ec':'#5c6375';
+  const blob=(x,y)=>{circ(x-8*s,y+2*s,6*s);circ(x,y-3*s,8*s);circ(x+8*s,y+1*s,6*s);ctx.fillRect(x-12*s,y+1*s,24*s,7*s);};
+  if(!happy&&s<2){ctx.fillStyle='#6ab0ff';for(let i=0;i<5;i++){const dx=(i-2)*5*s,dy=((t*40*s+i*13*s)%(14*s));ctx.fillRect(cx+dx,cy+9*s+dy,Math.max(1,s),2*s);}}
+  else{const cs=['#ff6b6b','#ffd84a','#6bdc7a','#6ab0ff'];cs.forEach((c,i)=>{ctx.fillStyle=c;ctx.fillRect(cx-12*s,cy+9*s+i*s,24*s,s);});}
+  ctx.fillStyle=sh;blob(cx,cy+2*s);ctx.fillStyle=col;blob(cx,cy);
+  ctx.fillStyle='#1a1a2e';
+  ctx.fillRect(cx-5*s,cy-2*s,2*s,3*s);ctx.fillRect(cx+3*s,cy-2*s,2*s,3*s);
+  if(happy){ctx.fillRect(cx-4*s,cy+2*s,s,s);ctx.fillRect(cx+3*s,cy+2*s,s,s);ctx.fillRect(cx-3*s,cy+3*s,6*s,s);
+    ctx.fillStyle='#ff9fb8';ctx.fillRect(cx-8*s,cy+1*s,2*s,s);ctx.fillRect(cx+6*s,cy+1*s,2*s,s);}
+  else{ctx.fillRect(cx-3*s,cy+2*s,6*s,s);ctx.fillRect(cx-4*s,cy+3*s,s,s);ctx.fillRect(cx+3*s,cy+3*s,s,s);
+    ctx.fillRect(cx-6*s,cy-4*s,3*s,s);ctx.fillRect(cx+3*s,cy-4*s,3*s,s);}
+}
+
+// ------------------------------------------------------------ entities
+const ENTS=[
+  {id:'owl',kind:'owl',x:7*T+2,y:5*T+2,w:12,h:13,solid:true},
+  {id:'lamb',kind:'lamb',x:11*T+2,y:10*T+4,w:12,h:8,solid:true},
+  {id:'sign',kind:'sign',x:14*T+2,y:5*T+4,w:12,h:11,solid:true},
+  {id:'stone1',kind:'stone',x:5*T+3,y:10*T+5,w:10,h:9,solid:true,
+    verse:['"The Lord is my shepherd; I have everything I need." (Psalm 23:1)']},
+  {id:'weed',kind:'weed',enemy:'weed',x:22*T,y:7*T+2,w:16,h:12,fx:22*T,fy:5*T+2},
+  {id:'frog',kind:'frog',enemy:'frog',x:33*T+2,y:7*T+4,w:12,h:9,fx:33*T+2,fy:10*T+4},
+  {id:'stone2',kind:'stone',x:42*T+3,y:5*T+5,w:10,h:9,solid:true,
+    verse:['"Be strong and courageous! Do not be afraid... for the Lord your God is with you wherever you go." (Joshua 1:9)']},
+  {id:'cloud',kind:'cloud',enemy:'cloud',x:46*T-6,y:6*T,w:28,h:20,fx:49*T-6,fy:3*T}
+];
+ENTS.forEach(e=>{e.ox=e.x;e.oy=e.y;});
+const ent=id=>ENTS.find(e=>e.id===id);
+function resetEnts(){ENTS.forEach(e=>{e.x=e.ox;e.y=e.oy;});}
+function applySpared(){ENTS.forEach(e=>{if(e.enemy&&G.flags.spared[e.enemy]){e.x=e.fx;e.y=e.fy;}});}
+
+function talkTo(e){
+  const F=G.flags;
+  if(e.id==='owl'){
+    if(!F.lantern){
+      say(["Grandpa Owl: Hoo-hoo! Good morning, {name}!",
+        "Grandpa Owl: The Whispering Woods have grown dark and gloomy. The creatures there have forgotten how to be happy.",
+        "Grandpa Owl: Take this little lantern. Jesus said, \"Let your light shine before others.\" (Matthew 5:16)",
+        "* You got the LANTERN!",
+        "Grandpa Owl: And here's some lunch for the road. If you get hurt, eat something!",
+        "* You got 2 APPLE SLICES, HONEY BREAD and GRANDMA'S COOKIE.",
+        "Grandpa Owl: Remember: in the woods you don't win by fighting. You win by being KIND.",
+        "Grandpa Owl: Use ACT to be kind. When the FRIENDSHIP meter is full, choose MERCY!"],
+        ()=>{});
+      F.lantern=true;G.items=LUNCH();sfx.item();
+    }else if(F.ended){say(["Grandpa Owl: Hoo! I'm so proud of you, {name}."]);}
+    else say(["Grandpa Owl: Be brave, {name}. God is with you wherever you go!",
+      spareCount()?`Grandpa Owl: I can see the woods getting brighter already! (${spareCount()} of 3 friends made)`:null]);
+  }
+  if(e.id==='lamb'){
+    if(!F.lantern)say(["Lamb: Baaa! Grandpa Owl was looking for you, {name}! He's by the houses."]);
+    else if(spareCount()<3)say(["Lamb: Baaa... I'm too scared to go into the woods.","Lamb: But I'll pray for you! You can do it!"]);
+    else say(["Lamb: Baaa! You did it! The woods are all sparkly now!"]);
+  }
+  if(e.id==='sign')say(["SIGN: → Whispering Woods.\nBe brave and be kind!"]);
+  if(e.kind==='stone'){
+    G.hp=G.maxHp;save();sfx.save();
+    say(["* A warm, glowing stone. Words are carved into it:",...e.verse,"* You feel safe. HP restored. Your progress was saved!"]);
+  }
+  if(e.id==='weed')say(["Grumbleweed: Thanks for being kind to me. I'm going to try being less prickly!"]);
+  if(e.id==='frog')say(["Fretful Frog: I still worry sometimes... but now I tell God about it! Ribbit!"]);
+  if(e.id==='cloud')say(["Grumblecloud: Look, a rainbow! The bridge is open. Go on across, friend!"]);
+}
+
+// ------------------------------------------------------------ enemies
+const ENEMIES={
+  weed:{name:'Grumbleweed',dur:5,pats:['leaves','thorns'],
+    pre:["Grumbleweed: Hmph! Stay away! Nobody likes a prickly plant anyway!"],
+    intro:"* Grumbleweed blocks the path, bristling its thorns!",
+    check:"* GRUMBLEWEED - Prickly on the outside. Hasn't had a friend in a long, long time.",
+    flavor:["* Grumbleweed is rustling grumpily.","* Grumbleweed mutters, \"Nobody ever visits me.\"","* Grumbleweed pretends not to look at you."],
+    ready:"* Grumbleweed looks like it wants to be friends!",
+    talk:["Go away!","Thorns are all\nI've got!","Hmph!"],talkHappy:["You really\nthink so?","Maybe I'm not\nso bad..."],
+    acts:[{n:'Check'},
+      {n:'Compliment',p:40,t:["* You tell Grumbleweed its leaves are a lovely shade of green.","* Grumbleweed blushes a little!"]},
+      {n:'Share Water',p:40,t:["* You share your water bottle with Grumbleweed.","* It perks right up!"]},
+      {n:'Listen',p:30,t:["* Grumbleweed grumbles about being left out.","* You listen to every word. It feels heard."]},
+      {n:'Pray',p:25,t:["* You pray for Grumbleweed.","* Something feels a little warmer."]},
+      {n:'Poke',p:0,t:["* You think about poking it...","* ...but that wouldn't be kind. You decide not to!"]}],
+    spare:["* You give Grumbleweed a gentle (careful!) hug.","* Grumbleweed is smiling for the first time in years!",
+      "\"Be kind and compassionate to one another.\" (Ephesians 4:32)","* You made a friend! You showed KINDNESS."]},
+  frog:{name:'Fretful Frog',dur:5,pats:['rain','bubbles'],
+    pre:["Fretful Frog: Oh no, oh no, oh no! A visitor! What if you're scary?! What if I'M scary?!"],
+    intro:"* Fretful Frog hops around in a worried panic!",
+    check:"* FRETFUL FROG - Worries about EVERYTHING. Especially rain. And not-rain.",
+    flavor:["* Fretful Frog is chewing its froggy fingernails.","* Fretful Frog is counting all its worries. There are a lot.","* Fretful Frog peeks at you nervously."],
+    ready:"* Fretful Frog looks calm enough to be friends!",
+    talk:["What if it\nRAINS?!","What if it\nDOESN'T?!","Ribbit...\nhelp!"],talkHappy:["I feel a little\nbetter!","Ribbit! :)"],
+    acts:[{n:'Check'},
+      {n:'Breathe',p:35,t:["* You breathe in slowly... and out.","* Fretful Frog copies you. In... and out."]},
+      {n:'Share a Verse',p:40,t:["* You tell Frog: \"Give all your worries to God, because He cares about you.\" (1 Peter 5:7)","* Frog's eyes get big. \"He cares about ME?\""]},
+      {n:'Hop Together',p:35,t:["* You hop! Frog hops! You both hop!","* For a moment, Frog forgets to worry."]},
+      {n:'Pray',p:25,t:["* You pray for Fretful Frog.","* Frog stops shaking a little."]},
+      {n:'Say "Relax!"',p:0,t:["* You tell Frog to just stop worrying.","* Now Frog is worried it's worrying wrong. Oops!"]}],
+    spare:["* Fretful Frog takes a big, slow breath and smiles.",
+      "\"Don't worry about anything; instead, pray about everything.\" (Philippians 4:6)","* You made a friend! You showed PEACE."]},
+  cloud:{name:'Grumblecloud',dur:6,pats:['rain','lightning','storm'],
+    pre:["Grumblecloud: RUMBLE! Nobody crosses MY bridge!","Grumblecloud: Everyone says I'm just a gloomy old cloud. Well FINE! I'll rain on EVERYBODY!"],
+    intro:"* Grumblecloud thunders angrily!",
+    check:"* GRUMBLECLOUD - Rained on the whole village. Feels very sorry about it... but too proud to say so.",
+    flavor:["* Grumblecloud rumbles.","* Grumblecloud is dripping on your shoes.","* Grumblecloud sniffles. Or is that just rain?"],
+    ready:"* Grumblecloud's thunder has gone quiet. It wants to be friends!",
+    talk:["RUMBLE!","Nobody likes a\nraincloud!","Go AWAY!"],talkHappy:["You're... not\nmad at me?","*sniff*\nThank you..."],
+    acts:[{n:'Check'},
+      {n:'Wait Patiently',p:25,t:["* You wait quietly while the cloud rumbles.","* The thunder gets a little softer."]},
+      {n:'Forgive',p:35,t:["* You tell Grumblecloud you forgive it for raining on everyone.","* Its lightning flickers... then stops."]},
+      {n:'Sing a Song',p:30,t:["* You sing \"This Little Light of Mine.\"","* Grumblecloud starts humming along!"]},
+      {n:'Share Umbrella',p:20,t:["* You offer your umbrella to the cloud.","* It's confused... but very touched."]},
+      {n:'Pray',p:25,t:["* You pray for Grumblecloud.","* A tiny patch of blue sky peeks through."]}],
+    spare:["* Grumblecloud lets out one last little sprinkle...","* ...and makes a RAINBOW!",
+      "\"Forgive as the Lord forgave you.\" (Colossians 3:13)","* You made a friend! You showed FORGIVENESS."]}
+};
+
+// ------------------------------------------------------------ battle
+const BIG={x:16,y:100,w:288,h:72},SMALL={x:105,y:98,w:110,h:78};
+const BTN=[{x:16,y:202,w:90,h:28,l:'ACT'},{x:115,y:202,w:90,h:28,l:'ITEM'},{x:214,y:202,w:90,h:28,l:'MERCY'}];
+let B=null;
+function startBattle(id){
+  B={id,E:ENEMIES[id],prog:0,used:{},state:'text',queue:[],qi:0,then:null,typer:new Typer(),menu:0,sub:0,list:[],listKind:'',
+    box:{...BIG},H:{x:160,y:137},bullets:[],t:0,turn:0,inv:0,bubble:'',tm:{},shake:0,dur:5,pat:'leaves'};
+  G.state='battle';G.fade=1;playSong('battle');
+  bSay([B.E.intro],toMenu);
+}
+function bSay(pages,then){pages=pages.filter(Boolean).map(fmt);B.state='text';B.queue=pages;B.qi=0;B.then=then;B.typer.set(pages[0]);}
+function toMenu(){B.state='menu';B.typer.set(B.prog>=100?B.E.ready:pick(B.E.flavor));}
+function listRect(i){return{x:BIG.x+14+(i%2)*138,y:BIG.y+8+Math.floor(i/2)*20,w:132,h:18};}
+function openMenu(i){
+  const E=B.E;B.sub=0;
+  if(i===0){B.list=E.acts.map(a=>a.n);B.listKind='act';B.state='sub';}
+  if(i===1){if(!G.items.length){bSay(["* Your lunch bag is empty!"],toMenu);return;}
+    B.list=G.items.map(it=>`${it.n} +${it.h}`);B.listKind='item';B.state='sub';}
+  if(i===2){B.list=['Spare'];B.listKind='mercy';B.state='sub';}
+}
+function choose(){
+  const E=B.E;
+  if(B.listKind==='act'){
+    const a=E.acts[B.sub];
+    if(a.n==='Check'){bSay([E.check],enemyTurn);return;}
+    const wasReady=B.prog>=100;let p=a.p;if(B.used[a.n])p=Math.floor(p/2);B.used[a.n]=1;
+    B.prog=Math.min(100,B.prog+p);if(p>0)sfx.heart();
+    bSay([...a.t,(!wasReady&&B.prog>=100)?E.ready+" Choose MERCY!":null],enemyTurn);
+  }else if(B.listKind==='item'){
+    const it=G.items.splice(B.sub,1)[0];const before=G.hp;G.hp=Math.min(G.maxHp,G.hp+it.h);sfx.heal();
+    bSay([`* You ate the ${it.n}. Yum! You got ${G.hp-before} HP back.`],enemyTurn);
+  }else{
+    if(B.prog>=100){sfx.spare();playSong('end');bSay(E.spare,winBattle);}
+    else bSay([`* ${E.name} isn't ready to be friends yet.`,"* Try being kind with ACT first. Watch the FRIENDSHIP meter!"],enemyTurn);
+  }
+}
+function enemyTurn(){
+  B.state='attack';B.t=0;B.bullets=[];B.tm={};B.H={x:160,y:137};
+  B.pat=B.E.pats[B.turn%B.E.pats.length];B.turn++;B.dur=B.E.dur;
+  B.bubble=pick(B.prog>=50?B.E.talkHappy:B.E.talk);
+}
+function winBattle(){
+  G.flags.spared[B.id]=true;applySpared();B=null;G.state='world';G.fade=1;save();
+  const n=spareCount();
+  say([n<3?`* The woods feel a little brighter now. (${n} of 3 friends made)`:"* The whole forest is glowing! The bridge is open.",
+    n===3?"* Cross the bridge to the east!":null]);
+}
+function every(key,int,dt,fn){int*=1+B.prog/140;if(B.tm[key]===undefined)B.tm[key]=0;B.tm[key]-=dt;if(B.tm[key]<=0){B.tm[key]+=int;fn();}}
+const PATS={
+  leaves(dt,bx,by,bw,bh){every('l',0.42,dt,()=>B.bullets.push({k:'leaf',x:bx+Math.random()*bw,y:by-4,vx:0,vy:32+Math.random()*18,r:3,sway:Math.random()*6}));},
+  thorns(dt,bx,by,bw,bh){every('t',0.8,dt,()=>{const L=Math.random()<0.5;B.bullets.push({k:'thorn',x:L?bx-6:bx+bw+6,y:by+6+Math.random()*(bh-12),vx:L?58:-58,vy:0,r:3,dir:L?1:-1});});},
+  rain(dt,bx,by,bw,bh){every('r',0.24,dt,()=>B.bullets.push({k:'drop',x:bx+Math.random()*bw,y:by-4,vx:0,vy:66,r:2,bounce:true}));},
+  bubbles(dt,bx,by,bw,bh){every('b',1.0,dt,()=>{const a=Math.random()*Math.PI*2,cx=bx+bw/2,cy=by+bh/2;
+    B.bullets.push({k:'bubble',x:cx+Math.cos(a)*55,y:cy+Math.sin(a)*45,vx:0,vy:0,r:4,home:26,life:4});});},
+  lightning(dt,bx,by,bw,bh){every('z',1.05,dt,()=>B.bullets.push({k:'bolt',x:bx+8+Math.random()*(bw-16),y:by,vx:0,vy:0,r:0,life:0.95}));
+    every('r2',0.6,dt,()=>B.bullets.push({k:'drop',x:bx+Math.random()*bw,y:by-4,vx:0,vy:60,r:2}));},
+  storm(dt,bx,by,bw,bh){PATS.rain(dt,bx,by,bw,bh);every('z',1.4,dt,()=>B.bullets.push({k:'bolt',x:bx+8+Math.random()*(bw-16),y:by,vx:0,vy:0,r:0,life:0.95}));}
+};
+function updateAttack(dt){
+  B.t+=dt;B.inv=Math.max(0,B.inv-dt);
+  const b=B.box,bx=b.x+3,by=b.y+3,bw=b.w-6,bh=b.h-6;
+  let dx=(held.right?1:0)-(held.left?1:0),dy=(held.down?1:0)-(held.up?1:0);
+  if(dx&&dy){dx*=0.707;dy*=0.707;}
+  const h=B.H;h.x=Math.max(bx+4,Math.min(bx+bw-4,h.x+dx*85*dt));h.y=Math.max(by+4,Math.min(by+bh-4,h.y+dy*85*dt));
+  if(B.t>0.6&&B.t<B.dur-0.4)PATS[B.pat](dt,bx,by,bw,bh);
+  for(const o of B.bullets){
+    o.t=(o.t||0)+dt;
+    if(o.home){const ddx=h.x-o.x,ddy=h.y-o.y,d=Math.hypot(ddx,ddy)||1;o.vx+=(ddx/d*o.home-o.vx)*dt*1.5;o.vy+=(ddy/d*o.home-o.vy)*dt*1.5;}
+    o.x+=o.vx*dt+(o.sway!==undefined?Math.sin(o.t*3+o.sway)*25*dt:0);o.y+=o.vy*dt;
+    if(o.bounce&&!o.bounced&&o.y>by+bh-2){o.vy=-48;o.bounced=true;}
+    if(o.bounced)o.vy+=120*dt;
+    if(o.life!==undefined&&o.t>o.life)o.dead=true;
+    if(o.x<bx-24||o.x>bx+bw+24||o.y>by+bh+10||o.y<by-30)o.dead=true;
+    if(B.inv<=0){
+      let hitMe=false;
+      if(o.k==='bolt')hitMe=o.t>0.6&&o.t<0.85&&Math.abs(h.x-o.x)<6;
+      else hitMe=Math.hypot(o.x-h.x,o.y-h.y)<o.r+3;
+      if(hitMe){G.hp-=o.k==='bolt'?4:3;B.inv=1;B.shake=0.25;sfx.hurt();if(o.k!=='bolt')o.dead=true;}
+    }
+  }
+  B.bullets=B.bullets.filter(o=>!o.dead);
+  if(G.hp<=0){G.hp=0;B.bullets=[];
+    bSay(["* Ouch! Your little light flickered...","* But God never gives up on you, and you shouldn't give up either!","* HP restored. Let's try again!"],()=>{G.hp=G.maxHp;toMenu();});return;}
+  if(B.t>=B.dur){B.bullets=[];toMenu();}
+}
+function updateBattle(dt){
+  const tgt=B.state==='attack'?SMALL:BIG;
+  for(const k of ['x','y','w','h'])B.box[k]+=(tgt[k]-B.box[k])*Math.min(1,dt*10);
+  B.shake=Math.max(0,B.shake-dt);
+  if(B.state==='text'){
+    B.typer.update(dt);
+    if(takeA()||takeB()){
+      if(!B.typer.done)B.typer.skip();
+      else{B.qi++;if(B.qi>=B.queue.length){const f=B.then;f&&f();}else B.typer.set(B.queue[B.qi]);}
+    }
+    return;
+  }
+  if(B.state==='menu'){
+    B.typer.update(dt);
+    if(tapPt){const i=BTN.findIndex(r=>hit(r,tapPt));if(i>=0)B.menu=i;else aPressed=false;}
+    if(tapped('left')){B.menu=(B.menu+2)%3;sfx.move();}
+    if(tapped('right')){B.menu=(B.menu+1)%3;sfx.move();}
+    if(takeA()){sfx.select();openMenu(B.menu);}
+    return;
+  }
+  if(B.state==='sub'){
+    const n=B.list.length;
+    if(tapPt){
+      const bi=BTN.findIndex(r=>hit(r,tapPt));
+      if(bi>=0){aPressed=false;B.menu=bi;sfx.select();openMenu(bi);return;}
+      let i=-1;for(let j=0;j<n;j++)if(hit(listRect(j),tapPt))i=j;
+      if(i>=0)B.sub=i;else aPressed=false;
+    }
+    if(tapped('down')&&B.sub+2<n){B.sub+=2;sfx.move();}
+    if(tapped('up')&&B.sub-2>=0){B.sub-=2;sfx.move();}
+    if(tapped('right')&&B.sub%2===0&&B.sub+1<n){B.sub++;sfx.move();}
+    if(tapped('left')&&B.sub%2===1){B.sub--;sfx.move();}
+    if(takeB()){B.state='menu';return;}
+    if(takeA()){sfx.select();choose();}
+    return;
+  }
+  if(B.state==='attack')updateAttack(dt);
+}
+function drawEnemyBig(id,cx,cy,happy,t){
+  const bob=Math.round(Math.sin(t*2.2)*2);
+  if(id==='weed'){const s=weedSpr[happy?1:0];spr(s,cx-32,cy-24+bob,false,4);}
+  if(id==='frog'){const hop=happy?Math.abs(Math.sin(t*4))*-6:Math.sin(t*14)*1.5;spr(frogSpr[happy?1:0],cx-24+(happy?0:Math.sin(t*20)),cy-18+hop,false,4);}
+  if(id==='cloud'){drawCloud(cx,cy-6+bob,2.4,happy,t);}
+}
+function drawBattle(){
+  const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0d1f2a');g.addColorStop(0.45,'#000');g.addColorStop(1,'#000');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.save();if(B.shake>0)ctx.translate(Math.random()*4-2,Math.random()*2-1);
+  const ready=B.prog>=100;
+  drawEnemyBig(B.id,160,50,ready,G.time);
+  // friendship meter
+  spr(heartSprY,100,87);
+  txt('FRIENDSHIP',110,86,'#ffd84a',8);
+  R('#3a2a3a',172,88,80,6);R(ready?'#ffd84a':'#ff7aa8',172,88,Math.round(80*B.prog/100),6);
+  // speech bubble
+  if(B.state==='attack'&&B.t<2.4){
+    R('#fff',206,14,100,30);ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(206,26);ctx.lineTo(196,32);ctx.lineTo(206,34);ctx.fill();
+    B.bubble.split('\n').forEach((l,i)=>txt(l,212,18+i*11,'#111',9));
+  }
+  const b=B.box;frame(b.x,b.y,b.w,b.h);
+  if(B.state==='text'||B.state==='menu')drawTyped(B.typer,b.x+12,b.y+10,b.w-24,10,14);
+  if(B.state==='sub'){
+    B.list.forEach((l,i)=>{const r=listRect(i);const sel=i===B.sub;
+      let col=sel?'#ffe14a':'#fff';if(B.listKind==='mercy'&&ready)col='#ffd84a';
+      if(sel)spr(heartSpr,r.x,r.y+4);
+      txt((B.listKind==='mercy'&&ready?'★ ':'')+l,r.x+11,r.y+3,col,10);});
+    if(B.listKind==='mercy'&&!ready)txt('(Fill the FRIENDSHIP meter first!)',b.x+20,b.y+46,'#999',8);
+  }
+  if(B.state==='attack'){
+    ctx.save();ctx.beginPath();ctx.rect(b.x+2,b.y+2,b.w-4,b.h-4);ctx.clip();
+    for(const o of B.bullets){
+      if(o.k==='leaf')spr(leafSpr,o.x-2,o.y-1);
+      if(o.k==='thorn'){R('#c48a3a',o.x-4,o.y-1,8,2);R('#8a5a1a',o.dir>0?o.x+4:o.x-6,o.y-1,2,2);R('#c48a3a',o.x-2,o.y-2,1,4);R('#c48a3a',o.x+1,o.y-2,1,4);}
+      if(o.k==='drop'){R('#6ab0ff',o.x-1,o.y-2,3,5);R('#cfe6ff',o.x-1,o.y-2,1,1);}
+      if(o.k==='bubble'){ctx.strokeStyle='#bcd8ff';ctx.lineWidth=1;ctx.beginPath();ctx.arc(o.x,o.y,4,0,Math.PI*2);ctx.stroke();R('#fff',o.x-2,o.y-2,1,1);}
+      if(o.k==='bolt'){
+        if(o.t<0.6){if(Math.floor(o.t*12)%2===0){ctx.globalAlpha=0.6;R('#ffd84a',o.x-1,b.y,2,b.h);ctx.globalAlpha=1;}}
+        else if(o.t<0.85){R('#ffd84a',o.x-5,b.y,10,b.h);R('#fff',o.x-2,b.y,4,b.h);}
+      }
+    }
+    if(B.inv<=0||Math.floor(B.inv*12)%2===0)spr(heartSpr,B.H.x-3,B.H.y-3);
+    ctx.restore();
+    if(B.turn<=1)txt('Move to dodge!',160,b.y+b.h+1,'#888',7,'center');
+  }
+  // HUD
+  txt(G.name.toUpperCase(),18,184,'#fff',10);
+  txt('HP',112,184,'#fff',10);
+  R('#c2203a',132,185,50,9);R('#ffd84a',132,185,Math.round(50*Math.max(0,G.hp)/G.maxHp),9);
+  txt(`${Math.max(0,G.hp)} / ${G.maxHp}`,188,184,'#fff',10);
+  BTN.forEach((r,i)=>{
+    const sel=i===B.menu&&(B.state==='menu'||B.state==='sub');
+    const col=sel?'#ffe14a':'#ff9a2e';
+    R(col,r.x,r.y,r.w,2);R(col,r.x,r.y+r.h-2,r.w,2);R(col,r.x,r.y,2,r.h);R(col,r.x+r.w-2,r.y,2,r.h);
+    if(sel&&B.state==='menu')spr(heartSpr,r.x+8,r.y+11);
+    txt(r.l,r.x+r.w/2+5,r.y+8,col,12,'center');
+  });
+  ctx.restore();
+}
+
+// ------------------------------------------------------------ world
+function feetBlocked(x,y){
+  const pts=[[x+2,y+11],[x+10,y+11],[x+2,y+15.5],[x+10,y+15.5]];
+  for(const [px,py] of pts){if(SOLID.has(tileAt(px,py)))return true;}
+  for(const e of ENTS){if(!e.solid)continue;
+    if(x+10>e.x&&x+2<e.x+e.w&&y+15.5>e.y+e.h-6&&y+11<e.y+e.h)return true;}
+  return x<0||x>MW*T-12;
+}
+function nearestTalk(){
+  let best=null,bd=26;const px=P.x+6,py=P.y+10;
+  for(const e of ENTS){if(e.enemy&&!G.flags.spared[e.enemy])continue;
+    const d=Math.hypot(e.x+e.w/2-px,e.y+e.h/2-py);if(d<bd){bd=d;best=e;}}
+  return best;
+}
+let pendingBattle=null,transT=0;
+function updateWorld(dt){
+  G.gateCD=Math.max(0,G.gateCD-dt);
+  if(DLG){updateDlg(dt);return;}
+  let dx=(held.right?1:0)-(held.left?1:0),dy=(held.down?1:0)-(held.up?1:0);
+  const moving=dx||dy;if(dx&&dy){dx*=0.707;dy*=0.707;}
+  const sp=74;
+  if(dx){const nx=P.x+dx*sp*dt;if(!feetBlocked(nx,P.y))P.x=nx;P.dir=dx>0?1:-1;}
+  if(dy){const ny=P.y+dy*sp*dt;if(!feetBlocked(P.x,ny))P.y=ny;}
+  P.walkT=moving?P.walkT+dt:0;
+  if(!G.flags.lantern&&P.x+12>15*T){P.x=15*T-12;
+    if(G.gateCD<=0){G.gateCD=2;say(["* It's too dark to go into the woods without a light.","* Maybe Grandpa Owl can help. He's by the houses."]);}return;}
+  for(const e of ENTS){
+    if(e.enemy&&!G.flags.spared[e.enemy]&&Math.abs(P.x+6-(e.x+e.w/2))<20){
+      const id=e.enemy;say(ENEMIES[id].pre,()=>{pendingBattle=id;transT=0;G.state='trans';});return;}
+  }
+  if(spareCount()===3&&!G.flags.ended&&P.x>53*T){startEnding();return;}
+  if(takeA()){const e=nearestTalk();if(e)talkTo(e);}
+  const s=spareCount();
+  playSong((P.x<15*T||P.x>48*T||s===3)?'village':'woods');
+}
+function darkness(){
+  if(G.flags.ended)return 0;
+  const x=P.x+6,base=[0.62,0.46,0.3,0][spareCount()];
+  const w0=15*T,w1=48*T;if(x<w0-16||x>w1+16)return 0;
+  let f=1;if(x<w0+16)f=(x-(w0-16))/32;if(x>w1-16)f=Math.min(f,(w1+16-x)/32);
+  return base*Math.max(0,Math.min(1,f));
+}
+const dk=document.createElement('canvas');dk.width=W*2;dk.height=H*2;const dctx=dk.getContext('2d');
+function drawWorld(){
+  const camX=Math.round(Math.max(0,Math.min(MW*T-W,P.x+6-W/2)));
+  ctx.drawImage(mapCv,camX,0,W,H,0,0,W,H);
+  // water shimmer
+  const t=G.time;
+  for(let tx=48;tx<=50;tx++)for(let ty=2;ty<13;ty++){if(map[ty][tx]!==3)continue;
+    const sx=tx*T-camX;if(sx<-T||sx>W)continue;const o=Math.floor((t*6+tx*3+ty*5)%16);R('#a8d0ff',sx+o%14,ty*T+((o*7)%14),2,1);}
+  ctx.save();ctx.translate(-camX,0);
+  const drawList=ENTS.map(e=>({y:e.y+e.h,e})).concat([{y:P.y+16,p:true}]).sort((a,b)=>a.y-b.y);
+  for(const d of drawList){
+    if(d.p){
+      const fr=heroSpr[G.hero][P.walkT>0&&Math.floor(P.walkT*7)%2===1?1:0];
+      R('rgba(0,0,0,0.2)',P.x+2,P.y+15,8,2);
+      spr(fr,P.x,P.y-(P.walkT>0&&Math.floor(P.walkT*7)%2===1?1:0),P.dir<0);
+      if(G.flags.lantern)spr(lanternSpr,P.dir>0?P.x+11:P.x-3,P.y+9);
+      continue;
+    }
+    const e=d.e;
+    if(e.x+e.w<camX-20||e.x>camX+W+20)continue;
+    const bob=Math.round(Math.sin(G.time*2+e.x)*1);
+    if(e.kind!=='cloud')R('rgba(0,0,0,0.2)',e.x+1,e.y+e.h-1,e.w-2,2);
+    if(e.kind==='owl')spr(owlSpr,e.x,e.y+bob);
+    if(e.kind==='lamb')spr(lambSpr,e.x,e.y,P.x<e.x);
+    if(e.kind==='sign')spr(signSpr,e.x,e.y);
+    if(e.kind==='stone'){R('#7a7f8a',e.x,e.y+2,10,7);R('#9aa0aa',e.x+1,e.y+1,8,2);
+      const gl=0.5+0.5*Math.sin(G.time*3);ctx.globalAlpha=0.5+gl*0.5;R('#ffd84a',e.x+4,e.y+3,2,4);R('#ffd84a',e.x+3,e.y+4,4,2);ctx.globalAlpha=1;}
+    if(e.kind==='weed')spr(weedSpr[G.flags.spared.weed?1:0],e.x,e.y+bob);
+    if(e.kind==='frog')spr(frogSpr[G.flags.spared.frog?1:0],e.x,e.y+(G.flags.spared.frog?Math.round(Math.abs(Math.sin(G.time*3))*-3):0));
+    if(e.kind==='cloud')drawCloud(e.x+14,e.y+8+bob,1,G.flags.spared.cloud,G.time);
+  }
+  ctx.restore();
+  // darkness + lantern light
+  const dark=darkness();
+  if(dark>0){
+    dctx.setTransform(1,0,0,1,0,0);dctx.globalCompositeOperation='source-over';dctx.clearRect(0,0,dk.width,dk.height);
+    dctx.fillStyle=`rgba(8,10,34,${dark})`;dctx.fillRect(0,0,dk.width,dk.height);
+    dctx.globalCompositeOperation='destination-out';
+    const holes=[[P.x+6-camX,P.y+10,62+Math.sin(G.time*5)*2]];
+    ENTS.forEach(e=>{if(e.kind==='stone')holes.push([e.x+5-camX,e.y+5,22]);});
+    for(const [hx,hy,hr] of holes){
+      const gr=dctx.createRadialGradient(hx*2,hy*2,hr*0.4,hx*2,hy*2,hr*2);
+      gr.addColorStop(0,'rgba(0,0,0,1)');gr.addColorStop(1,'rgba(0,0,0,0)');
+      dctx.fillStyle=gr;dctx.fillRect(0,0,dk.width,dk.height);
+    }
+    ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(dk,0,0);ctx.restore();
+    const lg=ctx.createRadialGradient(P.x+6-camX,P.y+10,4,P.x+6-camX,P.y+10,50);
+    lg.addColorStop(0,'rgba(255,210,110,0.18)');lg.addColorStop(1,'rgba(255,210,110,0)');
+    ctx.fillStyle=lg;ctx.fillRect(0,0,W,H);
+  }
+  if(G.flags.ended){ctx.fillStyle='rgba(255,220,150,0.12)';ctx.fillRect(0,0,W,H);}
+  // HUD
+  if(G.flags.lantern&&!G.flags.ended){
+    R('rgba(0,0,0,0.55)',4,4,128,16);
+    spr(heartSpr,8,9);txt(`${G.hp}/${G.maxHp}`,18,7,'#fff',9);
+    spr(heartSprY,62,9);txt(`Friends ${spareCount()}/3`,72,7,'#ffd84a',9);
+  }
+  if(DLG)drawDialog();
+}
+function drawDialog(){
+  frame(6,164,308,70);
+  drawTyped(DLG.typer,16,173,288,10,13);
+  if(DLG.typer.done&&Math.floor(G.time*3)%2===0)txt('▼',300,220,'#ffd84a',9);
+}
+
+// ------------------------------------------------------------ ending
+function startEnding(){
+  G.flags.ended=true;playSong('end');
+  const pos={weed:[54*T,5*T+2],frog:[56*T+4,10*T+4],cloud:[55*T,2*T+4],owl:[57*T,6*T+2],lamb:[53*T+8,10*T+4]};
+  for(const id in pos){const e=ent(id);e.x=pos[id][0];e.y=pos[id][1];}
+  say(["* The sun rises over the Whispering Woods.",
+    "* Everyone you helped has come to say thank you!",
+    "Grandpa Owl: Hoo-hoo! You did it, {name}! The woods are bright again.",
+    "Grandpa Owl: You never fought once. You showed KINDNESS, PEACE and FORGIVENESS.",
+    "\"The fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness, gentleness and self-control.\" (Galatians 5:22-23)",
+    "Grandpa Owl: Keep letting your little light shine!"],()=>{G.state='theend';G.fade=1;clearSave();});
+}
+
+// ------------------------------------------------------------ save
+const SAVEKEY='littleLanternSave1';
+function save(){try{localStorage.setItem(SAVEKEY,JSON.stringify({hero:G.hero,x:P.x,y:P.y,items:G.items,flags:G.flags}));}catch(e){}}
+function loadSave(){try{const s=localStorage.getItem(SAVEKEY);return s?JSON.parse(s):null;}catch(e){return null;}}
+function clearSave(){try{localStorage.removeItem(SAVEKEY);}catch(e){}}
+
+function newGame(h){
+  G.hero=h;G.name=HEROES[h].name;G.hp=G.maxHp;G.items=[];
+  G.flags={lantern:false,ended:false,spared:{weed:false,frog:false,cloud:false}};
+  P.x=3*T;P.y=7*T;P.dir=1;P.walkT=0;resetEnts();G.state='world';G.fade=1;
+  say(["* It's a bright morning in Brightwater Village.",
+    "* But to the east, the Whispering Woods look dark and gloomy...",
+    "* Maybe Grandpa Owl knows what's going on. Walk up to someone and press A to talk!"]);
+}
+function continueGame(s){
+  G.hero=s.hero||0;G.name=HEROES[G.hero].name;G.hp=G.maxHp;G.items=s.items||[];
+  G.flags=Object.assign({lantern:false,ended:false},s.flags||{});
+  G.flags.spared=Object.assign({weed:false,frog:false,cloud:false},(s.flags||{}).spared||{});
+  P.x=s.x;P.y=s.y;P.dir=1;resetEnts();applySpared();G.state='world';G.fade=1;
+  say(["* Welcome back, {name}! Your adventure continues."]);
+}
+
+// ------------------------------------------------------------ title / select / end screens
+const STARS=Array.from({length:70},(_,i)=>{const r=rng(i*7+1);return{x:r()*W,y:r()*150,p:r()*6};});
+function drawSky(top,bot){const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,top);g.addColorStop(1,bot);ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
+function drawHills(c1,c2){ctx.fillStyle=c1;for(let x=0;x<W;x+=4){const h=170+Math.sin(x/37)*10+Math.sin(x/13)*4;ctx.fillRect(x,h,4,H-h);}
+  ctx.fillStyle=c2;for(let x=0;x<W;x+=4){const h=196+Math.sin(x/23+1)*8;ctx.fillRect(x,h,4,H-h);}}
+function titleOptions(){return loadSave()?['New Game','Continue']:['New Game'];}
+function titleRect(i){return{x:110,y:160+i*18,w:100,h:16};}
+function updateTitle(){
+  const opts=titleOptions();if(G.titleSel>=opts.length)G.titleSel=0;
+  if(tapPt){let i=-1;opts.forEach((_,j)=>{if(hit(titleRect(j),tapPt))i=j;});if(i>=0)G.titleSel=i;else if(opts.length>1)aPressed=false;}
+  if(tapped('down')||tapped('up')){G.titleSel=(G.titleSel+1)%opts.length;sfx.move();}
+  if(takeA()){sfx.select();playSong('village');
+    if(opts[G.titleSel]==='Continue')continueGame(loadSave());else{G.state='select';}}
+}
+function drawTitle(){
+  drawSky('#0a0d2a','#2a1d4a');
+  STARS.forEach(s=>{const a=0.4+0.6*Math.abs(Math.sin(G.time*1.5+s.p));ctx.globalAlpha=a;R('#fff',Math.round(s.x),Math.round(s.y),1,1);});ctx.globalAlpha=1;
+  drawHills('#1a2a3a','#142030');
+  const gl=ctx.createRadialGradient(160,72,4,160,72,60);gl.addColorStop(0,'rgba(255,210,110,0.55)');gl.addColorStop(1,'rgba(255,210,110,0)');
+  ctx.fillStyle=gl;ctx.fillRect(0,0,W,H);
+  spr(lanternSpr,152,60+Math.sin(G.time*2)*2,false,4);
+  txt('THE LITTLE LANTERN',161,103,'#5a3a10',20,'center');
+  txt('THE LITTLE LANTERN',160,102,'#ffd84a',20,'center');
+  txt('A Build Kids Faith Adventure',160,128,'#9fe0d0',9,'center');
+  titleOptions().forEach((o,i)=>{const r=titleRect(i);const sel=i===G.titleSel;
+    if(sel)spr(heartSpr,r.x+4,r.y+4);txt(o,r.x+16,r.y+2,sel?'#ffe14a':'#ccc',11);});
+  txt(isTouch?'Tap or press A to choose':'Arrows move  ·  Z/Enter = A  ·  X = B',160,226,'#8890b0',8,'center');
+}
+function heroRect(i){return{x:i?186:70,y:60,w:64,h:100};}
+function updateSelect(){
+  if(tapPt){const i=[0,1].find(j=>hit(heroRect(j),tapPt));if(i!==undefined)G.heroSel=i;else aPressed=false;}
+  if(tapped('left')||tapped('right')){G.heroSel=1-G.heroSel;sfx.move();}
+  if(takeB()){G.state='title';return;}
+  if(takeA()){sfx.select();newGame(G.heroSel);}
+}
+function drawSelect(){
+  drawSky('#14204a','#3a2a5a');
+  txt('Who will carry the lantern?',160,24,'#fff',12,'center');
+  HEROES.forEach((h,i)=>{const r=heroRect(i),sel=i===G.heroSel;
+    if(sel){const gl=ctx.createRadialGradient(r.x+32,r.y+40,4,r.x+32,r.y+40,50);gl.addColorStop(0,'rgba(255,210,110,0.4)');gl.addColorStop(1,'rgba(255,210,110,0)');ctx.fillStyle=gl;ctx.fillRect(r.x-30,r.y-20,124,140);}
+    const bob=sel?Math.round(Math.sin(G.time*5)*2):0;
+    spr(heroSpr[i][0],r.x+8,r.y+4+bob,i===1,4);
+    txt(h.name,r.x+32,r.y+74,sel?'#ffe14a':'#aaa',12,'center');
+    if(sel)spr(heartSpr,r.x+28,r.y+92);
+  });
+  txt(isTouch?'Tap a hero, then press A':'← → to choose, A to start',160,214,'#8890b0',9,'center');
+}
+function drawEnd(){
+  drawSky('#ffb86b','#ffe9b0');
+  const sun=ctx.createRadialGradient(160,150,10,160,150,90);sun.addColorStop(0,'rgba(255,255,220,1)');sun.addColorStop(1,'rgba(255,255,220,0)');
+  ctx.fillStyle=sun;ctx.fillRect(0,0,W,H);
+  drawHills('#6fbf5a','#4e9a40');
+  drawCloud(60,40,1.4,true,G.time);
+  spr(weedSpr[1],110,200);spr(frogSpr[1],140,202+Math.round(Math.abs(Math.sin(G.time*4))*-4));
+  spr(heroSpr[G.hero][0],160,194);spr(lanternSpr,171,203);spr(owlSpr,186,197);spr(lambSpr,206,204);
+  txt('THE END',161,23,'#7a3a10',24,'center');txt('THE END',160,22,'#fff',24,'center');
+  txt(`Thanks for playing, ${G.name}!`,160,58,'#5a2a10',11,'center');
+  txt('Friends made: 3 of 3',160,80,'#5a2a10',10,'center');
+  txt('You showed KINDNESS · PEACE · FORGIVENESS',160,96,'#5a2a10',9,'center');
+  txt('"Let your light shine." Matthew 5:16',160,118,'#7a3a10',9,'center');
+  if(Math.floor(G.time*2)%2===0)txt('Press A to play again',160,140,'#7a3a10',10,'center');
+}
+
+// ------------------------------------------------------------ main loop
+let last=performance.now();
+function update(dt){
+  G.time+=dt;G.fade=Math.max(0,G.fade-dt*2);
+  if(G.state==='title')updateTitle();
+  else if(G.state==='select')updateSelect();
+  else if(G.state==='world')updateWorld(dt);
+  else if(G.state==='trans'){transT+=dt;if(transT>0.7){startBattle(pendingBattle);}}
+  else if(G.state==='battle')updateBattle(dt);
+  else if(G.state==='theend'){if(takeA()){G.state='title';G.titleSel=0;resetEnts();}}
+}
+function draw(){
+  ctx.setTransform(2,0,0,2,0,0);ctx.imageSmoothingEnabled=false;
+  ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+  if(G.state==='title')drawTitle();
+  else if(G.state==='select')drawSelect();
+  else if(G.state==='world')drawWorld();
+  else if(G.state==='trans'){drawWorld();if(Math.floor(transT*10)%2===0){ctx.fillStyle='rgba(255,255,255,0.85)';ctx.fillRect(0,0,W,H);spr(heartSpr,P.x>0?156:156,116,false,1);}}
+  else if(G.state==='battle')drawBattle();
+  else if(G.state==='theend')drawEnd();
+  if(G.fade>0){ctx.fillStyle=`rgba(0,0,0,${G.fade})`;ctx.fillRect(0,0,W,H);}
+}
+function loop(now){
+  const dt=Math.min(0.05,(now-last)/1000);last=now;
+  DIRS.forEach(d=>held[d]=keyHeld[d]||padHeld[d]||dirTap[d]);
+  try{update(dt);draw();}catch(err){console.error(err);}
+  prevHeld={...held};DIRS.forEach(d=>dirTap[d]=false);aPressed=false;bPressed=false;tapPt=null;
+  musicTick();
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+// test hook
+window.__LL={G,P,ENTS,get B(){return B;},startBattle,newGame};
+</script>
+</body>
+</html>
